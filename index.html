@@ -205,6 +205,38 @@
     font-size:14px; cursor:pointer; text-decoration:underline dotted; text-underline-offset:3px;}
   .focus-done{font-family:"Fraunces",Georgia,serif; font-size:22px; color:var(--ember); margin-top:20px; display:none;}
 
+  /* gym calendar */
+  .gym-stats{display:flex; gap:10px; margin-bottom:16px;}
+  .stat{flex:1; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:12px 14px;}
+  .stat .n{font-family:"Fraunces",Georgia,serif; font-weight:600; font-size:26px; color:var(--ember); line-height:1;}
+  .stat .l{color:var(--muted); font-size:12.5px; margin-top:4px;}
+  .cal{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:16px; margin-bottom:18px;}
+  .cal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .cal-title{font-family:"Fraunces",Georgia,serif; font-weight:500; font-size:18px;}
+  .cal-nav{display:flex; gap:6px;}
+  .cal-nav button{width:34px; height:34px; border-radius:9px; border:1px solid var(--line); background:transparent; color:var(--ink); cursor:pointer; font-size:17px; line-height:1;}
+  .cal-nav button:hover{border-color:var(--muted);}
+  .cal-wd{display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:6px;}
+  .cal-wd span{text-align:center; color:var(--muted-dim); font-size:11px; font-weight:600;}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
+  .cal-cell{aspect-ratio:1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+    font-size:14px; color:var(--ink); cursor:pointer; border:1px solid transparent; -webkit-tap-highlight-color:transparent;}
+  .cal-cell.blank{cursor:default;}
+  .cal-cell:not(.blank):active{transform:scale(.94);}
+  .cal-cell:not(.blank):hover{background:var(--surface-2);}
+  .cal-cell.today{border-color:var(--muted);}
+  .cal-cell .cdot{width:6px; height:6px; border-radius:50%; background:transparent;}
+  .cal-cell.has{background:var(--ember-soft);}
+  .cal-cell.has .cdot{background:var(--ember);}
+  .cal-cell.has.today{border-color:var(--ember-line);}
+  .recent-title{color:var(--muted); font-size:13px; margin:2px 0 10px;}
+  .recent{display:flex; flex-direction:column; gap:8px;}
+  .recent-row{display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line);
+    border-radius:12px; padding:10px 14px; cursor:pointer;}
+  .recent-row:hover{border-color:var(--muted);}
+  .recent-row .rd{color:var(--muted); font-size:12.5px; min-width:78px; flex:none;}
+  .recent-row .rt{font-weight:600; font-size:14.5px; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+
   @media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
 </style>
 </head>
@@ -236,6 +268,10 @@
   <button class="tab active" id="tabToday">
     <span class="tabwrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
     Today
+  </button>
+  <button class="tab" id="tabGym">
+    <span class="tabwrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 7v10M17.5 7v10M4 9.5v5M20 9.5v5M6.5 12h11"/></svg></span>
+    Gym
   </button>
   <button class="tab" id="tabFree">
     <span class="tabwrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
@@ -271,6 +307,22 @@
     <div class="actions">
       <button class="btn" id="cancelBtn">Cancel</button>
       <button class="btn primary" id="saveBtn" disabled>Add goal</button>
+    </div>
+  </div>
+</div>
+
+<!-- gym day editor sheet -->
+<div class="scrim" id="gymScrim">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="gymTitle">
+    <h3 id="gymTitle">Log workout</h3>
+    <div class="field">
+      <label id="gymDateLabel" for="gymInput"></label>
+      <input type="text" id="gymInput" placeholder="Legs + boxing" autocomplete="off" maxlength="60">
+    </div>
+    <div class="field"><div class="chips" id="gymChips"></div></div>
+    <div class="actions">
+      <button class="btn" id="gymClear">Clear day</button>
+      <button class="btn primary" id="gymSave">Save</button>
     </div>
   </div>
 </div>
@@ -331,6 +383,7 @@
   } catch(e){}
   if (!Array.isArray(state.free)) state.free = [];   // backward compatible
   if (!state.logs) state.logs = {};
+  if (!state.workouts || typeof state.workouts!=="object") state.workouts = {};   // date -> "Legs + boxing"
 
   var lastSave = 0;
   function save(force){
@@ -366,6 +419,7 @@
   function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];}); }
   function flameSVG(){ return "<svg class='flame' viewBox='0 0 24 24' aria-hidden='true'><path d='M12 2c1.4 3 5 4.4 5 8.8a5 5 0 0 1-10 0c0-1.7.7-2.8 1.5-3.7C9 8.5 9.2 7.4 9 6.6c1.2.5 2 1.3 2.4 2.4C11.8 7.4 11.2 4.8 12 2z' fill='#E8B04B'/></svg>"; }
   function checkSVG(){ return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12.5l4.5 4.5L19 7'/></svg>"; }
+  function dumbSVG(){ return "<svg class='flame' viewBox='0 0 24 24' fill='none' stroke='#E8B04B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6.5 7v10M17.5 7v10M4 9.5v5M20 9.5v5M6.5 12h11'/></svg>"; }
   function clockSVG(){ return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M12 7v5l3 2'/></svg>"; }
 
   // ---------------- view state ----------------
@@ -384,6 +438,14 @@
       var d=Math.floor(longest/DAY);
       hl.innerHTML = f===1 ? "One thing you're staying free from." : "<span class='num'>"+f+"</span> things you're staying free from.";
       sl.style.display="flex"; sl.innerHTML = flameSVG()+" Longest run right now: <b>&nbsp;"+d+" day"+(d===1?"":"s")+"</b>";
+      return;
+    }
+    if (view==="gym"){
+      var mc=monthCount(new Date().getFullYear(), new Date().getMonth());
+      if (mc===0) hl.textContent="No workouts logged this month yet.";
+      else hl.innerHTML="<span class='num'>"+mc+"</span> workout"+(mc===1?"":"s")+" this month.";
+      var wc=weekCount();
+      sl.style.display="flex"; sl.innerHTML = dumbSVG()+" This week: <b>&nbsp;"+wc+"</b>";
       return;
     }
     var g=state.goals.length, done=doneTodayCount();
@@ -556,6 +618,95 @@
     }
   }
 
+  // ---------------- GYM view ----------------
+  var gymY=new Date().getFullYear(), gymM=new Date().getMonth();
+  function hasWorkout(d){ var v=state.workouts[d]; return !!(v && String(v).trim()); }
+  function setWorkout(d,note){ if(note && note.trim()) state.workouts[d]=note.trim(); else delete state.workouts[d]; save(true); }
+  function monthCount(y,m){ var pre=y+"-"+String(m+1).padStart(2,"0")+"-"; var n=0; for(var k in state.workouts){ if(k.indexOf(pre)===0 && hasWorkout(k)) n++; } return n; }
+  function startOfWeek(){ var d=new Date(); var wd=(d.getDay()+6)%7; d.setHours(0,0,0,0); d.setDate(d.getDate()-wd); return d; }
+  function weekCount(){ var s=startOfWeek(), n=0; for(var i=0;i<7;i++){ var dd=new Date(s); dd.setDate(s.getDate()+i); if(hasWorkout(ymd(dd))) n++; } return n; }
+
+  function renderGym(){
+    var el=document.createElement("div");
+    var mc=monthCount(new Date().getFullYear(), new Date().getMonth()), wc=weekCount();
+    var stats="<div class='gym-stats'>"+
+      "<div class='stat'><div class='n'>"+mc+"</div><div class='l'>this month</div></div>"+
+      "<div class='stat'><div class='n'>"+wc+"</div><div class='l'>this week</div></div></div>";
+
+    var monthName=new Date(gymY,gymM,1).toLocaleDateString(undefined,{month:"long",year:"numeric"});
+    var first=new Date(gymY,gymM,1);
+    var startWd=(first.getDay()+6)%7;               // Mon=0
+    var dim=new Date(gymY,gymM+1,0).getDate();
+    var wdRow=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(function(w){return "<span>"+w+"</span>";}).join("");
+    var t=today(), cells="";
+    for(var b=0;b<startWd;b++) cells+="<div class='cal-cell blank'></div>";
+    for(var day=1; day<=dim; day++){
+      var ds=ymd(new Date(gymY,gymM,day));
+      var cls="cal-cell"+(hasWorkout(ds)?" has":"")+(ds===t?" today":"");
+      cells+="<div class='"+cls+"' data-d='"+ds+"'><span class='cd'>"+day+"</span><span class='cdot'></span></div>";
+    }
+    var cal="<div class='cal'><div class='cal-head'><div class='cal-title'>"+monthName+"</div>"+
+      "<div class='cal-nav'><button data-nav='-1' aria-label='Previous month'>&#8249;</button>"+
+      "<button data-nav='1' aria-label='Next month'>&#8250;</button></div></div>"+
+      "<div class='cal-wd'>"+wdRow+"</div><div class='cal-grid'>"+cells+"</div></div>";
+
+    var entries=Object.keys(state.workouts).filter(hasWorkout).sort().reverse().slice(0,5);
+    var recent;
+    if(entries.length){
+      recent="<p class='recent-title'>Recent sessions</p><div class='recent'>"+entries.map(function(d){
+        var dd=new Date(d+"T00:00:00");
+        var lab=dd.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+        return "<div class='recent-row' data-d='"+d+"'><span class='rd'>"+lab+"</span><span class='rt'>"+escapeHtml(state.workouts[d])+"</span></div>";
+      }).join("")+"</div>";
+    } else {
+      recent="<p class='recent-title'>Tap any day to log what you trained.</p>";
+    }
+
+    el.innerHTML=stats+cal+recent;
+    content.innerHTML=""; content.appendChild(el);
+    el.querySelectorAll(".cal-cell[data-d]").forEach(function(c){ c.addEventListener("click", function(){ openGymEditor(c.getAttribute("data-d")); }); });
+    el.querySelectorAll(".cal-nav button").forEach(function(bt){ bt.addEventListener("click", function(){
+      gymM+=parseInt(bt.getAttribute("data-nav"),10);
+      if(gymM<0){gymM=11;gymY--;} if(gymM>11){gymM=0;gymY++;} renderGym();
+    }); });
+    el.querySelectorAll(".recent-row").forEach(function(r){ r.addEventListener("click", function(){ openGymEditor(r.getAttribute("data-d")); }); });
+  }
+
+  var gymScrim=document.getElementById("gymScrim");
+  var gymInput=document.getElementById("gymInput");
+  var gymEditDate=null;
+  function buildGymChips(){
+    var box=document.getElementById("gymChips");
+    var opts=["Legs","Push","Pull","Chest","Back","Arms","Core","Boxing","Cardio","Run"];
+    box.innerHTML="";
+    opts.forEach(function(o){
+      var bb=document.createElement("button"); bb.className="chip"; bb.style.setProperty("--tone","var(--c-gym)"); bb.textContent=o;
+      bb.addEventListener("click", function(){ var v=gymInput.value.trim(); gymInput.value = v ? (v+" + "+o) : o; gymInput.focus(); });
+      box.appendChild(bb);
+    });
+  }
+  function openGymEditor(d){
+    gymEditDate=d;
+    var dd=new Date(d+"T00:00:00");
+    document.getElementById("gymDateLabel").textContent=dd.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+    gymInput.value=state.workouts[d]||"";
+    document.getElementById("gymClear").style.display=hasWorkout(d)?"":"none";
+    buildGymChips();
+    gymScrim.classList.add("open");
+    setTimeout(function(){ gymInput.focus(); },60);
+  }
+  function closeGym(){ gymScrim.classList.remove("open"); }
+  document.getElementById("gymSave").addEventListener("click", function(){
+    var val=gymInput.value; setWorkout(gymEditDate, val); closeGym();
+    if(view==="gym") renderGym(); renderHero();
+    toast(val.trim() ? "Workout logged" : "Day cleared");
+  });
+  document.getElementById("gymClear").addEventListener("click", function(){
+    setWorkout(gymEditDate,""); closeGym(); if(view==="gym") renderGym(); renderHero(); toast("Day cleared");
+  });
+  gymInput.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); document.getElementById("gymSave").click(); } });
+  gymScrim.addEventListener("click", function(e){ if(e.target===gymScrim) closeGym(); });
+
   // ---------------- add flows ----------------
   var scrim=document.getElementById("scrim");
   var gInput=document.getElementById("gInput");
@@ -649,7 +800,7 @@
     }
   }
 
-  document.getElementById("addBtn").addEventListener("click", openSheet);
+  document.getElementById("addBtn").addEventListener("click", function(){ if(view==="gym") openGymEditor(today()); else openSheet(); });
   document.getElementById("cancelBtn").addEventListener("click", closeSheet);
   saveBtn.addEventListener("click", commit);
   scrim.addEventListener("click", function(e){ if(e.target===scrim) closeSheet(); });
@@ -773,14 +924,16 @@
   function setView(v){
     view=v;
     document.getElementById("tabToday").classList.toggle("active", v==="today");
+    document.getElementById("tabGym").classList.toggle("active", v==="gym");
     document.getElementById("tabFree").classList.toggle("active", v==="free");
     document.getElementById("hint").style.display = (v==="today") ? "" : "none";
     render();
   }
   document.getElementById("tabToday").addEventListener("click", function(){ setView("today"); });
+  document.getElementById("tabGym").addEventListener("click", function(){ setView("gym"); });
   document.getElementById("tabFree").addEventListener("click", function(){ setView("free"); });
 
-  function render(){ renderHero(); if(view==="today") renderToday(); else renderFree(); }
+  function render(){ renderHero(); if(view==="today") renderToday(); else if(view==="gym") renderGym(); else renderFree(); }
 
   // ---------------- toast ----------------
   var toastEl=document.getElementById("toast"), toastT=null;
