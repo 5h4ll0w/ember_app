@@ -26,7 +26,7 @@
     min-height:100vh; min-height:100dvh; line-height:1.45;}
   .wrap{max-width:560px; margin:0 auto; padding:calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 108px);}
   header{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px;}
-  .brand{display:flex; align-items:center; gap:9px;}
+  .brand{display:flex; align-items:center; gap:9px; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
   .brand svg{width:22px; height:22px; display:block;}
   .brand .name{font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:20px; letter-spacing:.2px;}
   .add-top{width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:var(--surface); color:var(--ember);
@@ -122,6 +122,22 @@
   .recent-row:hover{border-color:var(--muted);}
   .recent-row .rd{color:var(--muted); font-size:12.5px; min-width:78px; flex:none;}
   .recent-row .rt{font-weight:600; font-size:14.5px; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+
+  /* gym plan (only shown when a plan is switched on) */
+  .today-card{display:flex; align-items:center; justify-content:space-between; gap:12px; background:linear-gradient(180deg, var(--ember-soft), transparent), var(--surface);
+    border:1px solid var(--ember-line); border-radius:var(--r); padding:15px 16px; margin-bottom:16px; cursor:pointer; -webkit-tap-highlight-color:transparent;}
+  .today-card:active{transform:scale(.992);}
+  .today-card.done{border-color:var(--line); background:var(--surface);}
+  .tc-l{color:var(--muted); font-size:12px; font-weight:600; letter-spacing:.3px; text-transform:uppercase; margin-bottom:3px;}
+  .tc-n{font-family:"Fraunces",Georgia,serif; font-weight:500; font-size:22px; line-height:1.15;}
+  .tc-s{color:var(--muted); font-size:13px; margin-top:3px;}
+  .tc-go{flex:none; color:var(--ember); font-size:14px; font-weight:600;}
+  .sess-info{color:var(--muted); font-size:12.5px; line-height:1.5; margin-top:10px;}
+  .ex-target{color:var(--muted); font-size:12.5px; margin:-2px 0 10px 2px; line-height:1.45;}
+  .ex-note{margin-top:2px; color:var(--muted-dim);}
+  .ss-tag{display:inline-block; margin-left:8px; font-size:10.5px; font-weight:600; color:var(--ember); background:var(--ember-soft); padding:1px 8px; border-radius:999px; vertical-align:1px;}
+  .round-btn{flex:1; min-width:0; border:1px solid var(--line); background:var(--surface); color:var(--muted); font-family:inherit; font-size:14px; padding:9px 10px; border-radius:9px; cursor:pointer; text-align:center;}
+  .round-btn.on{background:var(--ember); color:#231a06; border-color:var(--ember); font-weight:600;}
 
   /* free */
   .free-card{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:18px; overflow:hidden;}
@@ -257,7 +273,7 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="brand">
+    <div class="brand" id="brand">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1.4 3 5 4.4 5 8.8a5 5 0 0 1-10 0c0-1.7.7-2.8 1.5-3.7C9 8.5 9.2 7.4 9 6.6c1.2.5 2 1.3 2.4 2.4C11.8 7.4 11.2 4.8 12 2z" fill="#E8B04B"/></svg>
       <span class="name">Ember</span>
     </div>
@@ -376,6 +392,11 @@
       </button>
     </div>
     <span class="sheet-sub" id="gymDateLabel"></span>
+    <div class="field" id="sessField" style="display:none">
+      <label>Session (holiday week? use Upper A, Lower A, Upper B, Lower B)</label>
+      <div class="chips" id="sessChips"></div>
+      <div class="sess-info" id="sessInfo"></div>
+    </div>
     <div class="unit-row">Weight in: <button data-unit="kg">kg</button><button data-unit="lb">lb</button></div>
     <div id="exList"></div>
     <button class="btn ghost" id="addEx">+ Add exercise</button>
@@ -440,6 +461,112 @@
     {label:"1 day",ms:1*DAY},{label:"3 days",ms:3*DAY},{label:"1 week",ms:7*DAY},{label:"2 weeks",ms:14*DAY},
     {label:"1 month",ms:30*DAY},{label:"3 months",ms:90*DAY},{label:"6 months",ms:180*DAY},{label:"1 year",ms:365*DAY}
   ];
+
+  // ---------- optional training plan ----------
+  // Off by default, so everyone gets the plain "log your own exercises" Gym tab.
+  // Switch it on or off by tapping the Ember logo 5 times (remembered on this device).
+  // Exercise notation: n = name, s = sets, r = rep target, rest = rest time, ss = superset with the neighbour.
+  var PLAN=(function(){
+    function X(n,s,r,rest,o){ var e={n:n,s:s,r:r,rest:rest||""}; if(o){ for(var k in o){ e[k]=o[k]; } } return e; }
+    var LIFT="Warm-up: 5 min bike or incline walk, then 2 ramp-up sets of the first exercise (they don't count as sets).";
+    var SS={ss:1};
+    var S={
+      push:{label:"Push",min:80,info:LIFT,ex:[
+        X("Press banca con barra",4,"6–8","2 min"),
+        X("Press inclinado con mancuernas",3,"8–10","2 min"),
+        X("Press de hombro con mancuernas, sentado",3,"8–10","2 min"),
+        X("Elevaciones laterales con mancuernas",4,"12–15","60 s"),
+        X("Aperturas en polea o pec deck",3,"12–15","60 s"),
+        X("Extensión de tríceps sobre la cabeza con cuerda",3,"10–12","60 s",SS),
+        X("Jalón de tríceps en polea",3,"12–15","60 s",SS)
+      ]},
+      pull:{label:"Pull",min:80,info:LIFT,ex:[
+        X("Dominadas",4,"6–10","2 min",{note:"Lat pulldown instead if you can't reach 6 reps."}),
+        X("Remo con barra",4,"6–8","2 min"),
+        X("Remo en polea baja, agarre neutro",3,"10–12","90 s"),
+        X("Pullover en polea con cuerda",3,"12–15","60 s"),
+        X("Face pull",3,"15","60 s"),
+        X("Curl con barra Z",3,"8–10","60 s",SS),
+        X("Curl martillo con mancuernas",3,"10–12","60 s",SS)
+      ]},
+      legs:{label:"Legs",min:85,info:LIFT+" Short on time? Drop the leg extension.",ex:[
+        X("Sentadilla con barra",4,"6–8","2 a 3 min"),
+        X("Peso muerto rumano",3,"8–10","2 min"),
+        X("Prensa de pierna",3,"10–12","2 min"),
+        X("Curl femoral acostado",3,"10–12","90 s"),
+        X("Extensión de cuádriceps",3,"12–15","60 s"),
+        X("Gemelo de pie",4,"10–15","60 s",{note:"Pause 1 s at the bottom stretch on every rep."}),
+        X("Gemelo sentado",3,"15–20","60 s",{note:"Pause 1 s at the bottom stretch on every rep."})
+      ]},
+      upper:{label:"Upper",min:80,info:LIFT,ex:[
+        X("Press banca con mancuernas",3,"8–10","2 min"),
+        X("Remo con mancuerna a una mano",3,"8–10","90 s"),
+        X("Press militar con barra, de pie",3,"6–8","2 min"),
+        X("Jalón al pecho, agarre neutro",3,"8–12","90 s"),
+        X("Elevaciones laterales en polea",3,"15","60 s"),
+        X("Curl inclinado con mancuernas",3,"10–12","60 s",SS),
+        X("Extensión de tríceps en polea, agarre en V",3,"10–12","60 s",SS)
+      ]},
+      lower:{label:"Lower",min:75,info:LIFT,ex:[
+        X("Hack squat o sentadilla frontal",3,"8–10","2 min"),
+        X("Hip thrust",3,"8–12","2 min"),
+        X("Zancadas caminando",3,"10/pierna","90 s"),
+        X("Curl femoral sentado",3,"10–12","90 s"),
+        X("Gemelo en prensa",4,"12–15","60 s"),
+        X("Gemelo sentado",3,"15–20","60 s"),
+        X("Elevación de piernas colgado o rueda abdominal",3,"10–15","60 s")
+      ]},
+      upperA:{label:"Upper A",min:80,info:LIFT,ex:[
+        X("Press banca con barra",4,"6–8","2 min"),
+        X("Remo con barra",4,"6–8","2 min"),
+        X("Press de hombro con mancuernas, sentado",3,"8–10","2 min"),
+        X("Jalón al pecho, agarre neutro",3,"8–10","90 s"),
+        X("Elevaciones laterales con mancuernas",4,"12–15","60 s"),
+        X("Curl con barra Z",3,"10","60 s",SS),
+        X("Jalón de tríceps en polea",3,"10–12","60 s",SS)
+      ]},
+      lowerA:{label:"Lower A",min:80,info:LIFT,ex:[
+        X("Sentadilla con barra",4,"6–8","2 a 3 min"),
+        X("Peso muerto rumano",3,"8–10","2 min"),
+        X("Prensa de pierna",3,"10–12","2 min"),
+        X("Curl femoral acostado",3,"10–12","90 s"),
+        X("Gemelo de pie",4,"10–15","60 s"),
+        X("Gemelo sentado",3,"15–20","60 s"),
+        X("Elevación de piernas colgado o rueda abdominal",3,"10–15","60 s")
+      ]},
+      upperB:{label:"Upper B",min:80,info:LIFT,ex:[
+        X("Press inclinado con mancuernas",4,"8–10","2 min"),
+        X("Remo en polea baja o remo con pecho apoyado",4,"10–12","90 s"),
+        X("Press Arnold",3,"10–12","90 s"),
+        X("Dominadas o jalón al pecho, agarre ancho",3,"8–12","90 s"),
+        X("Elevaciones laterales en polea",3,"15–20","60 s"),
+        X("Curl martillo con mancuernas",3,"10–12","60 s",SS),
+        X("Press francés con barra Z",3,"10–12","60 s",SS)
+      ]},
+      lowerB:{label:"Lower B",min:75,info:LIFT,ex:[
+        X("Hack squat o sentadilla búlgara",3,"8–10","2 min"),
+        X("Hip thrust",3,"8–12","2 min"),
+        X("Zancadas caminando",3,"10/pierna","90 s"),
+        X("Curl femoral sentado",3,"12","90 s"),
+        X("Gemelo en prensa",4,"12–15","60 s"),
+        X("Gemelo sentado",3,"15–20","60 s"),
+        X("Plancha con peso o rueda abdominal",3,"30–45 s","60 s")
+      ]},
+      boxeo:{label:"Boxeo",min:60,unit:"blocks",info:"Technique and cardio at medium-high intensity, don't aim to drain yourself. Wraps and gloves whenever you hit the bag. Cool-down: 5 min walk and stretching. No bag today? 6 rounds of shadow boxing plus 3 rounds of jump rope.",ex:[
+        X("Saltar cuerda (calentamiento)",3,"","",{rounds:1,note:"Plus shoulder and hip mobility. 10 min in total."}),
+        X("Sombra",3,"3 min","1 min",{rounds:1,note:"Jab, cross, footwork, slips."}),
+        X("Saco",6,"3 min","1 min",{rounds:1,note:"R1–2: jab, jab, cross. R3–4: jab, cross, hook, cross + side step. R5: body hook, head hook, slip, cross. R6: 30 s hard / 30 s free, 3 times."}),
+        X("Core",3,"","",{rounds:1,lab:"laps",note:"Each lap: plank, weighted Russian twists, leg raises. 10 min in total."})
+      ]},
+      rest:{label:"Rest",min:0,info:"Total rest day. A walk is fine.",ex:[]}
+    };
+    return {
+      name:"Bulk Limpio",
+      sessions:S,
+      order:["push","pull","legs","upper","lower","upperA","lowerA","upperB","lowerB","boxeo","rest"],
+      byDay:{0:"rest",1:"push",2:"pull",3:"legs",4:"upper",5:"lower",6:"boxeo"}
+    };
+  })();
 
   // ---------- state + migration ----------
   var state={ habits:[], logs:{}, sessions:{}, free:[], workouts:{}, tasks:[], settings:{unit:"kg"} };
@@ -531,6 +658,14 @@
 
   // ---------- gym ----------
   var gymY=new Date().getFullYear(), gymM=new Date().getMonth();
+  function planOn(){ return state.settings.plan==="bulk"; }
+  function defaultSession(d){ return PLAN.byDay[parseYmd(d).getDay()]; }
+  function sessionOf(d){ var w=state.workouts[d]; return (w&&w.session&&PLAN.sessions[w.session])?w.session:defaultSession(d); }
+  function togglePlan(){
+    state.settings.plan = planOn() ? null : "bulk"; save();
+    toast(planOn() ? PLAN.name+" plan on" : "Plan off — free logging");
+    if(view==="gym") renderGym();
+  }
   function workoutOf(d){ return state.workouts[d]; }
   function hasWorkout(d){ var w=state.workouts[d]; if(!w) return false; var ex=(w.exercises||[]).some(function(e){return e.name&&e.name.trim();}); return ex || !!(w.note&&w.note.trim()); }
   function monthCount(y,m){ var pre=y+"-"+String(m+1).padStart(2,"0")+"-", n=0; for(var k in state.workouts){ if(k.indexOf(pre)===0 && hasWorkout(k)) n++; } return n; }
@@ -538,9 +673,10 @@
   function weekWorkouts(){ var s=startOfWeek(), n=0; for(var i=0;i<7;i++){ var dd=new Date(s); dd.setDate(s.getDate()+i); if(hasWorkout(ymd(dd))) n++; } return n; }
   function workoutSummary(d){
     var w=state.workouts[d]; if(!w) return "";
+    var pre=(w.session&&PLAN.sessions[w.session])?PLAN.sessions[w.session].label+" · ":"";
     var names=(w.exercises||[]).filter(function(e){return e.name&&e.name.trim();}).map(function(e){return e.name.trim();});
-    if(names.length){ var s=names.slice(0,3).join(", "); if(names.length>3) s+=" +"+(names.length-3); return s; }
-    return w.note||"";
+    if(names.length){ var s=names.slice(0,3).join(", "); if(names.length>3) s+=" +"+(names.length-3); return pre+s; }
+    return pre+(w.note||"");
   }
 
   // ---------- tasks ----------
@@ -659,6 +795,13 @@
   }
 
   // ---- gym view ----
+  function todayCardHTML(){
+    var t=today(), s=PLAN.sessions[sessionOf(t)], done=hasWorkout(t);
+    var sub = s.ex.length ? s.ex.length+" "+(s.unit||"exercises")+" · ~"+s.min+" min" : "Rest day";
+    return "<div class='today-card"+(done?" done":"")+"' data-d='"+t+"'><div><div class='tc-l'>Today · "+escapeHtml(PLAN.name)+"</div>"+
+      "<div class='tc-n'>"+escapeHtml(s.label)+"</div><div class='tc-s'>"+sub+"</div></div>"+
+      "<span class='tc-go'>"+(done?"Edit":"Log")+" →</span></div>";
+  }
   function renderGym(){
     var el=document.createElement("div");
     var mc=monthCount(new Date().getFullYear(), new Date().getMonth()), wc=weekWorkouts();
@@ -682,10 +825,14 @@
         return "<div class='recent-row' data-d='"+d+"'><span class='rd'>"+lab+"</span><span class='rt'>"+escapeHtml(workoutSummary(d))+"</span></div>";
       }).join("")+"</div>";
     } else recent="<p class='recent-title'>Tap any day to log your workout.</p>";
-    el.innerHTML=stats+cal+recent; content.innerHTML=""; content.appendChild(el);
+    var top = planOn() ? todayCardHTML() : "";
+    var foot = planOn() ? "<p class='hint'>"+escapeHtml(PLAN.name)+" plan is on. <a id='planOff'>Turn off</a></p>" : "";
+    el.innerHTML=top+stats+cal+recent+foot; content.innerHTML=""; content.appendChild(el);
     el.querySelectorAll(".cal-cell[data-d]").forEach(function(c){ c.addEventListener("click", function(){ openGymEditor(c.getAttribute("data-d")); }); });
     el.querySelectorAll(".cal-nav button").forEach(function(bt){ bt.addEventListener("click", function(){ gymM+=parseInt(bt.getAttribute("data-nav"),10); if(gymM<0){gymM=11;gymY--;} if(gymM>11){gymM=0;gymY++;} renderGym(); }); });
     el.querySelectorAll(".recent-row").forEach(function(r){ r.addEventListener("click", function(){ openGymEditor(r.getAttribute("data-d")); }); });
+    el.querySelectorAll(".today-card").forEach(function(c){ c.addEventListener("click", function(){ openGymEditor(c.getAttribute("data-d")); }); });
+    var po=el.querySelector("#planOff"); if(po) po.addEventListener("click", togglePlan);
   }
 
   // ---- tasks view ----
@@ -883,59 +1030,127 @@
 
   // ================= gym editor =================
   var gymScrim=document.getElementById("gymScrim"), exList=document.getElementById("exList"), gymNote=document.getElementById("gymNote");
-  var gymDate=null;
+  var gymDate=null, gymSession=null;
   function unit(){ return state.settings.unit||"kg"; }
+  function blankEx(){ return {name:"",sets:[{w:"",r:""}]}; }
   function readGymDOM(){
     var exs=[];
     exList.querySelectorAll(".ex").forEach(function(ex){
       var name=ex.querySelector(".ex-name").value;
       var sets=[];
       ex.querySelectorAll(".set-row").forEach(function(sr){
+        var rb=sr.querySelector(".round-btn");
+        if(rb){ sets.push({ w:"", r:rb.classList.contains("on")?"✓":"" }); return; }
         var ins=sr.querySelectorAll(".mini");
         sets.push({ w:ins[0].value.trim(), r:ins[1].value.trim() });
       });
-      exs.push({ name:name, sets:sets });
+      exs.push({ name:name, sets:sets, plan:ex._plan||null });
     });
     return exs;
   }
+  function targetText(p){
+    var t = p.rounds ? (p.s+" "+(p.lab||"rounds")+(p.r?" × "+p.r:"")) : (p.s+" × "+p.r);
+    if(p.rest) t+=" · rest "+p.rest;
+    return t;
+  }
+  // Merge a session's planned exercises with whatever is already logged or typed for the day.
+  function planExercises(sid, existing){
+    var s=PLAN.sessions[sid], out=[], used={};
+    existing=existing||[];
+    (s?s.ex:[]).forEach(function(p){
+      var idx=-1;
+      for(var i=0;i<existing.length;i++){ if(!used[i] && existing[i].name===p.n){ idx=i; break; } }
+      var sets=[];
+      if(idx>-1){ used[idx]=true; sets=(existing[idx].sets||[]).map(function(x){ return {w:x.w||"", r:x.r||""}; }); }
+      while(sets.length<p.s) sets.push({w:"",r:""});
+      out.push({name:p.n, sets:sets, plan:p});
+    });
+    existing.forEach(function(e,i){
+      if(used[i]) return;
+      var has=(e.sets||[]).some(function(x){ return x.w||x.r; });
+      if(has || (e.name&&e.name.trim()&&!e.plan)) out.push({name:e.name, sets:(e.sets&&e.sets.length)?e.sets:[{w:"",r:""}]});
+    });
+    return out;
+  }
   function renderExList(exs){
     exList.innerHTML="";
+    if(!exs.length && planOn()){ exList.innerHTML="<p class='sess-info' style='margin:0 0 12px'>Nothing planned for this session.</p>"; return; }
     exs.forEach(function(ex,i){
-      var d=document.createElement("div"); d.className="ex"; d.setAttribute("data-i",i);
+      var p=ex.plan||null;
+      var d=document.createElement("div"); d.className="ex"; d.setAttribute("data-i",i); d._plan=p;
       var setsHtml="";
       (ex.sets.length?ex.sets:[{w:"",r:""}]).forEach(function(s,si){
-        setsHtml+="<div class='set-row'><span class='set-n'>"+(si+1)+"</span>"+
-          "<input class='mini' inputmode='decimal' placeholder='"+unit()+"' value='"+escapeHtml(s.w||"")+"'>"+
-          "<span class='setx'>×</span>"+
-          "<input class='mini' inputmode='numeric' placeholder='reps' value='"+escapeHtml(s.r||"")+"'>"+
-          "<button class='set-del' aria-label='Remove set'>&#215;</button></div>";
+        if(p && p.rounds){
+          setsHtml+="<div class='set-row'><span class='set-n'>"+(si+1)+"</span>"+
+            "<button type='button' class='round-btn"+(s.r?" on":"")+"'>"+escapeHtml((p.lab==="laps"?"Lap ":"Round ")+(si+1)+(p.r?" · "+p.r:""))+"</button>"+
+            "<button class='set-del' aria-label='Remove set'>&#215;</button></div>";
+        } else {
+          setsHtml+="<div class='set-row'><span class='set-n'>"+(si+1)+"</span>"+
+            "<input class='mini' inputmode='decimal' placeholder='"+unit()+"' value='"+escapeHtml(s.w||"")+"'>"+
+            "<span class='setx'>×</span>"+
+            "<input class='mini' inputmode='numeric' placeholder='"+escapeHtml(p?p.r:"reps")+"' value='"+escapeHtml(s.r||"")+"'>"+
+            "<button class='set-del' aria-label='Remove set'>&#215;</button></div>";
+        }
       });
+      var tgt="";
+      if(p){ tgt="<div class='ex-target'>"+escapeHtml(targetText(p))+(p.ss?"<span class='ss-tag'>Superset</span>":"")+(p.note?"<div class='ex-note'>"+escapeHtml(p.note)+"</div>":"")+"</div>"; }
       d.innerHTML="<div class='ex-head'><input class='ex-name' placeholder='Exercise (e.g. Bench press)' value='"+escapeHtml(ex.name||"")+"'><button class='ex-del' aria-label='Remove exercise'>&#215;</button></div>"+
-        "<div class='sets'>"+setsHtml+"</div><button class='add-set'>+ Add set</button>";
+        tgt+"<div class='sets'>"+setsHtml+"</div><button class='add-set'>"+(p&&p.rounds?"+ Add round":"+ Add set")+"</button>";
       exList.appendChild(d);
-      d.querySelector(".ex-del").addEventListener("click", function(){ var cur=readGymDOM(); cur.splice(i,1); renderExList(cur.length?cur:[{name:"",sets:[{w:"",r:""}]}]); });
+      d.querySelectorAll(".round-btn").forEach(function(b){ b.addEventListener("click", function(){ b.classList.toggle("on"); }); });
+      d.querySelector(".ex-del").addEventListener("click", function(){ var cur=readGymDOM(); cur.splice(i,1); renderExList(cur.length?cur:[blankEx()]); });
       d.querySelector(".add-set").addEventListener("click", function(){ var cur=readGymDOM(); cur[i].sets.push({w:"",r:""}); renderExList(cur); });
       d.querySelectorAll(".set-del").forEach(function(btn,si){ btn.addEventListener("click", function(){ var cur=readGymDOM(); cur[i].sets.splice(si,1); if(!cur[i].sets.length) cur[i].sets.push({w:"",r:""}); renderExList(cur); }); });
     });
+  }
+  function renderSessChips(){
+    var opts=PLAN.order.map(function(k){ return {label:PLAN.sessions[k].label, val:k}; });
+    chipRow(document.getElementById("sessChips"), opts, function(o){ return o.val===gymSession; }, function(o){
+      var cur=readGymDOM(); gymSession=o.val; renderSessChips(); renderExList(planExercises(gymSession,cur));
+    });
+    var s=PLAN.sessions[gymSession];
+    document.getElementById("gymTitle").textContent=s.label+(s.min?" · ~"+s.min+" min":"");
+    document.getElementById("sessInfo").textContent=s.info||"";
   }
   function setUnitButtons(){ gymScrim.querySelectorAll(".unit-row button").forEach(function(b){ b.classList.toggle("sel", b.getAttribute("data-unit")===unit()); }); }
   function openGymEditor(d){
     gymDate=d;
     document.getElementById("gymDateLabel").textContent=parseYmd(d).toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
     var w=state.workouts[d]||{exercises:[],note:""};
-    var exs=(w.exercises&&w.exercises.length)?JSON.parse(JSON.stringify(w.exercises)):[{name:"",sets:[{w:"",r:""}]}];
-    renderExList(exs); gymNote.value=w.note||""; setUnitButtons();
+    var saved=(w.exercises&&w.exercises.length)?JSON.parse(JSON.stringify(w.exercises)):[];
+    if(planOn()){
+      gymSession=sessionOf(d);
+      show("sessField",true); renderSessChips();
+      renderExList(planExercises(gymSession,saved));
+    } else {
+      gymSession=null;
+      show("sessField",false);
+      document.getElementById("gymTitle").textContent="Log workout";
+      renderExList(saved.length?saved:[blankEx()]);
+    }
+    gymNote.value=w.note||""; setUnitButtons();
     document.getElementById("gymClear").style.display=hasWorkout(d)?"":"none";
     gymScrim.classList.add("open");
   }
   function closeGym(){ gymScrim.classList.remove("open"); }
   document.getElementById("gymXBtn").addEventListener("click", closeGym);
-  document.getElementById("addEx").addEventListener("click", function(){ var cur=readGymDOM(); cur.push({name:"",sets:[{w:"",r:""}]}); renderExList(cur); });
-  gymScrim.querySelectorAll(".unit-row button").forEach(function(b){ b.addEventListener("click", function(){ state.settings.unit=b.getAttribute("data-unit"); save(); var cur=readGymDOM(); setUnitButtons(); renderExList(cur.length?cur:[{name:"",sets:[{w:"",r:""}]}]); }); });
+  document.getElementById("addEx").addEventListener("click", function(){ var cur=readGymDOM(); cur.push(blankEx()); renderExList(cur); });
+  gymScrim.querySelectorAll(".unit-row button").forEach(function(b){ b.addEventListener("click", function(){ state.settings.unit=b.getAttribute("data-unit"); save(); var cur=readGymDOM(); setUnitButtons(); renderExList(cur.length?cur:[blankEx()]); }); });
   document.getElementById("gymSave").addEventListener("click", function(){
-    var exs=readGymDOM().map(function(e){ return { name:e.name.trim(), sets:e.sets.filter(function(s){return s.w||s.r;}) }; }).filter(function(e){ return e.name || e.sets.length; });
+    var inPlan=planOn() && gymSession;
+    var exs=readGymDOM().map(function(e){
+      var sets=e.sets;
+      if(inPlan){ var last=-1; sets.forEach(function(s,i){ if(s.w||s.r) last=i; }); sets=sets.slice(0,last+1); }   // keep set positions, drop trailing blanks
+      else sets=sets.filter(function(s){return s.w||s.r;});
+      return { name:e.name.trim(), sets:sets, plan:e.plan };
+    }).filter(function(e){ return e.plan ? e.sets.length>0 : (e.name || e.sets.length); })   // planned exercises count only once something is logged
+      .map(function(e){ return { name:e.name, sets:e.sets }; });
     var note=gymNote.value.trim();
-    if(exs.length||note) state.workouts[gymDate]={exercises:exs, note:note}; else delete state.workouts[gymDate];
+    if(exs.length||note){
+      var rec={exercises:exs, note:note};
+      if(inPlan) rec.session=gymSession;
+      state.workouts[gymDate]=rec;
+    } else delete state.workouts[gymDate];
     save(); closeGym(); if(view==="gym") renderGym(); renderHero(); toast(exs.length||note?"Workout saved":"Day cleared");
   });
   document.getElementById("gymClear").addEventListener("click", function(){ delete state.workouts[gymDate]; save(); closeGym(); if(view==="gym") renderGym(); renderHero(); toast("Day cleared"); });
@@ -994,6 +1209,12 @@
     else if(view==="tasks") openSheet("task");
     else if(view==="free") openSheet("free");
     else openSheet("habit");
+  });
+  // tap the Ember logo 5 times (within 1.5 s between taps) to switch the training plan on or off
+  var logoTaps=0, logoT=null;
+  document.getElementById("brand").addEventListener("click", function(){
+    logoTaps++; clearTimeout(logoT); logoT=setTimeout(function(){ logoTaps=0; },1500);
+    if(logoTaps>=5){ logoTaps=0; togglePlan(); }
   });
   function render(){ renderHero(); if(view==="habits") renderHabits(); else if(view==="gym") renderGym(); else if(view==="tasks") renderTasks(); else renderFree(); }
 
