@@ -36,7 +36,8 @@
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
-  body{background:radial-gradient(120% 80% at 50% -10%, var(--glow) 0%, var(--bg) 55%, var(--bg-2) 100%) fixed, var(--bg);
+  html{background:var(--bg); -webkit-text-size-adjust:100%;}
+  body{background:var(--bg); overscroll-behavior-y:none;
     color:var(--ink); font-family:var(--font-ui); -webkit-font-smoothing:antialiased;
     min-height:100vh; min-height:100dvh; line-height:1.45;}
   .wrap{max-width:560px; margin:0 auto; padding:calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 108px);}
@@ -58,7 +59,7 @@
   .flame{width:15px;height:15px;display:inline-block;vertical-align:-2px;}
 
   .list{display:flex; flex-direction:column; gap:12px;}
-  .card{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  .card{position:relative; contain:layout style; background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
     padding:15px 15px 15px 18px; display:flex; align-items:center; gap:12px; cursor:pointer;
     -webkit-tap-highlight-color:transparent; overflow:hidden; transition:border-color .18s ease, background .18s ease, transform .12s ease;}
   .card::before{content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--tone,#7E8C88); opacity:.9;}
@@ -165,7 +166,7 @@
   .free-clock{font-family:var(--font-mono); font-weight:500; color:var(--muted); font-size:13.5px; font-variant-numeric:tabular-nums; letter-spacing:0; margin-bottom:16px;}
   .bar-label{display:flex; justify-content:space-between; color:var(--muted); font-size:12.5px; margin-bottom:7px;}
   .bar{height:8px; border-radius:999px; background:var(--bg-2); overflow:hidden; border:1px solid var(--line);}
-  .bar-fill{height:100%; background:linear-gradient(90deg, rgba(var(--accent-rgb),.3), var(--ember)); border-radius:999px; transition:width .5s ease;}
+  .bar-fill{height:100%; width:100%; background:linear-gradient(90deg, rgba(var(--accent-rgb),.3), var(--ember));}
   .miles{display:flex; flex-wrap:wrap; gap:6px; margin-top:14px;}
   .mile{font-size:11px; padding:3px 9px; border-radius:999px; border:1px solid var(--line); color:var(--muted-dim);}
   .mile.hit{color:var(--on-accent); background:var(--ember); border-color:var(--ember); font-weight:600;}
@@ -183,8 +184,8 @@
   .starter:hover{border-color:var(--muted); background:var(--surface);}
   .starter .swatch{width:9px;height:9px;border-radius:50%;background:var(--tone,var(--ember));}
 
-  .tabs{position:fixed; left:0; right:0; bottom:0; z-index:40; background:color-mix(in srgb, var(--bg-2) 86%, transparent);
-    backdrop-filter:blur(12px); border-top:1px solid var(--line); padding:8px 8px calc(env(safe-area-inset-bottom) + 8px); display:flex; justify-content:center; gap:4px;}
+  .tabs{position:fixed; left:0; right:0; bottom:0; z-index:40; background:var(--bg-2);
+    border-top:1px solid var(--line); padding:8px 8px calc(env(safe-area-inset-bottom) + 8px); display:flex; justify-content:center; gap:4px;}
   .tab{flex:1; max-width:130px; background:transparent; border:0; cursor:pointer; font-family:inherit; color:var(--muted-dim);
     display:flex; flex-direction:column; align-items:center; gap:3px; padding:5px; border-radius:12px; font-size:11px; font-weight:600;}
   .tab svg{width:21px;height:21px;}
@@ -192,7 +193,7 @@
   .tab.active .tabwrap{background:var(--ember-soft);}
   .tabwrap{width:50px; height:29px; border-radius:999px; display:grid; place-items:center; transition:background .15s ease;}
 
-  .scrim{position:fixed; inset:0; background:rgba(var(--bg-rgb),.74); backdrop-filter:blur(3px); display:none; align-items:flex-end; justify-content:center; z-index:60;}
+  .scrim{position:fixed; inset:0; background:rgba(var(--bg-rgb),.82); display:none; align-items:flex-end; justify-content:center; z-index:60;}
   .scrim.open{display:flex;}
   .sheet{background:var(--surface); width:100%; max-width:560px; border-radius:22px 22px 0 0; border:1px solid var(--line); border-bottom:0;
     padding:22px 20px calc(env(safe-area-inset-bottom) + 22px); animation:rise .24s ease; max-height:88vh; overflow-y:auto;}
@@ -290,11 +291,10 @@
 
   /* card finishes */
   .card,.free-card,.cal,.task{
-    background:linear-gradient(135deg, rgba(var(--surface-rgb),.9), rgba(var(--surface2-rgb),.6));
-    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);}
+    background:linear-gradient(135deg, var(--surface), rgba(var(--surface2-rgb),.92));}
 
   /* active glows */
-  .card.done,.today-card:not(.done),.tab.active .tabwrap,.cal-cell.has{box-shadow:0 0 20px -5px rgba(var(--accent-rgb),.35);}
+  .today-card:not(.done),.tab.active .tabwrap{box-shadow:0 0 16px -6px rgba(var(--accent-rgb),.35);}
   .preset.sel,.unit-row button.sel,.round-btn.on,.mile.hit,.toggle.on .switch{box-shadow:0 0 12px -4px rgba(var(--accent-rgb),.45);}
 
   /* primary buttons */
@@ -303,11 +303,13 @@
   .btn.primary:disabled{box-shadow:none;}
 
   /* tab bar */
-  .tabs{border-radius:20px 20px 0 0; -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);}
+  .tabs{border-radius:20px 20px 0 0; background:rgba(var(--bg-rgb),.97); contain:layout style;}
 
   /* ---------- terminal layer ---------- */
   .wrap{position:relative; z-index:1;}
-  body::before{content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  body::after{content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; will-change:transform; transform:translateZ(0);
+    background:radial-gradient(120% 80% at 50% -10%, var(--glow) 0%, var(--bg) 55%, var(--bg-2) 100%);}
+  body::before{content:""; position:fixed; inset:0; z-index:0; pointer-events:none; will-change:transform; transform:translateZ(0);
     background-image:linear-gradient(rgba(var(--accent-rgb),.05) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--accent-rgb),.05) 1px, transparent 1px);
     background-size:28px 28px;
     -webkit-mask-image:radial-gradient(90% 55% at 50% 0%, #000 0%, transparent 100%); mask-image:radial-gradient(90% 55% at 50% 0%, #000 0%, transparent 100%);}
@@ -332,7 +334,111 @@
   .btn.primary{letter-spacing:.02em;}
   .task .tdue{border-radius:5px;}
   .task .tname{white-space:normal; overflow-wrap:anywhere; line-height:1.3;}
+  /* ---------- motion: transform/opacity only, so it runs on the compositor ---------- */
+  #content > *{animation:viewIn .22s cubic-bezier(.2,.8,.2,1) both;}
+  @keyframes viewIn{from{opacity:0; transform:translate3d(0,8px,0);} to{opacity:1; transform:none;}}
+  .card,.task,.today-card,.btn,.add-top,.cal-cell,.chip,.starter{transition-property:transform,background-color,border-color,opacity; transition-duration:.14s; transition-timing-function:ease;}
+  .bar-fill{transition:transform .5s ease; transform-origin:left center; will-change:transform;}
+  #content{touch-action:pan-y;}
   @media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
+
+  /* ---------- v2: five tabs, habit lists, task calendar, focus tab ---------- */
+  :root{ --pend:#FF4D5E; --okc:#3DFF8F; }
+  .tab{max-width:104px; padding:5px 2px;}
+  .tabwrap{width:46px;}
+  .tab{font-size:9.5px; letter-spacing:.06em;}
+  .add-top.hidden{visibility:hidden;}
+
+  /* habit cards with a list inside */
+  .prog{display:flex; align-items:center; gap:9px; margin:-2px 0 9px;}
+  .prog-bar{flex:1; height:5px; border-radius:99px; background:var(--bg-2); border:1px solid var(--line); overflow:hidden;}
+  .prog-fill{height:100%; width:100%; background:var(--tone,var(--ember)); transform-origin:left center; transition:transform .35s ease;}
+  .prog-txt{flex:none; color:var(--muted); font-size:12px; font-variant-numeric:tabular-nums;}
+  .more-btn{flex:none; width:36px; height:36px; border:0; background:transparent; color:var(--muted-dim); cursor:pointer; border-radius:9px; display:grid; place-items:center;}
+  .more-btn svg{width:18px; height:18px;}
+  .more-btn:hover{color:var(--muted); background:var(--surface-2);}
+
+  /* habit detail sheet */
+  .kind-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .items{display:flex; flex-direction:column; gap:7px; margin:12px 0 4px;}
+  .item{display:flex; align-items:center; gap:11px; background:var(--bg-2); border:1px solid var(--line); border-radius:10px; padding:9px 10px 9px 12px;}
+  .item .icheck{flex:none; width:24px; height:24px; border-radius:50%; border:2px solid var(--line); display:grid; place-items:center; color:transparent; cursor:pointer; background:transparent; padding:0;}
+  .item .icheck svg{width:14px; height:14px;}
+  .item.done .icheck{border-color:var(--ember); background:var(--ember); color:var(--on-accent);}
+  .item .itext{flex:1; min-width:0; font-size:14.5px; overflow-wrap:anywhere; line-height:1.3;}
+  .item.done .itext{color:var(--muted-dim); text-decoration:line-through;}
+  .item .idel{flex:none; width:30px; height:30px; border:0; background:transparent; color:var(--muted-dim); font-size:17px; cursor:pointer; border-radius:8px;}
+  .add-row{display:flex; gap:8px; margin-top:10px;}
+  .add-row input{flex:1; min-width:0; background:var(--bg-2); border:1px solid var(--line); color:var(--ink); font-size:16px; padding:12px 13px; border-radius:8px; outline:none;}
+  .add-row input:focus{border-color:var(--ember-line);}
+  .add-row button{flex:none; width:48px; border-radius:8px; border:1px solid var(--ember); background:var(--ember); color:var(--on-accent); font-size:22px; cursor:pointer;}
+  .linkbtn{background:transparent; border:0; color:var(--muted); font-family:inherit; font-size:13px; text-decoration:underline dotted; text-underline-offset:3px; cursor:pointer; padding:6px 2px;}
+  .row-split{display:flex; gap:10px; align-items:center; justify-content:space-between;}
+  .field input[type=time], .field input[type=number]{width:100%; background:var(--bg-2); border:1px solid var(--line); color:var(--ink); font-size:16px; padding:13px 14px; border-radius:8px; outline:none; color-scheme:dark;}
+  .field input[type=date]{color-scheme:dark;}
+  :root[data-theme="red"] .field input[type=time], :root[data-theme="red"] .field input[type=date]{color-scheme:dark;}
+  .two{display:flex; gap:10px;} .two > *{flex:1; min-width:0;}
+  .danger{color:var(--alert); border-color:color-mix(in srgb, var(--alert) 45%, var(--line));}
+
+  /* task calendar + rows */
+  .cal-cell .cdots{display:flex; gap:3px; height:6px;}
+  .cal-cell .cdot2{width:6px; height:6px; border-radius:50%;}
+  .cal-cell .cdot2.p{background:var(--pend);} .cal-cell .cdot2.d{background:var(--okc);}
+  .cal-cell.sel{background:var(--ember-soft); border-color:var(--ember-line);}
+  .legend{display:flex; gap:16px; margin-top:12px; color:var(--muted); font-size:12px;}
+  .legend i{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px;}
+  .day-head{display:flex; align-items:baseline; justify-content:space-between; margin:4px 2px 10px;}
+  .day-head b{font-family:var(--font-display); font-weight:500; font-size:17px;}
+  .task .tmain{flex:1; min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:6px;}
+  .task .tname{flex:none; max-width:100%; overflow-wrap:break-word; word-break:normal;}
+  .task .tdue.soon{color:var(--ember); background:var(--ember-soft);}
+  .syncbox{margin-top:22px; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px;}
+  .syncbox h4{margin:0 0 4px; font-family:var(--font-display); font-weight:500; font-size:16px;}
+  .syncbox p{margin:0 0 10px; color:var(--muted); font-size:12.5px; line-height:1.5;}
+  .syncbox .chips{margin:10px 0;}
+
+  /* focus tab */
+  .seg{display:flex; background:var(--bg-2); border:1px solid var(--line); border-radius:10px; padding:3px; gap:3px; margin-bottom:16px;}
+  .seg button{flex:1; border:0; background:transparent; color:var(--muted); font-family:inherit; font-size:14px; font-weight:600; padding:11px 8px; border-radius:8px; cursor:pointer; letter-spacing:.02em;}
+  .seg button.on{background:var(--ember); color:var(--on-accent); box-shadow:0 0 12px -4px rgba(var(--accent-rgb),.5);}
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:14px;}
+  .panel h4{margin:0 0 12px; font-family:var(--font-display); font-weight:500; font-size:15px; color:var(--muted);}
+  .hms{display:flex; align-items:center; justify-content:center; gap:8px;}
+  .hms .u{display:flex; flex-direction:column; align-items:center; gap:5px;}
+  .hms input{width:84px; text-align:center; background:var(--bg-2); border:1px solid var(--line); color:var(--ink); font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-size:34px; font-weight:500; padding:10px 4px; border-radius:10px; outline:none;}
+  .hms input:focus{border-color:var(--ember-line);}
+  .hms .u span{color:var(--muted); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;}
+  .hms .colon{font-size:30px; color:var(--muted-dim); margin-top:-18px;}
+  .total{text-align:center; color:var(--muted); font-size:13px; margin-top:12px;}
+  .total b{color:var(--ember); font-family:var(--font-mono); font-weight:600;}
+  .pre{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:14px;}
+  .stepline{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0;}
+  .stepline + .stepline{border-top:1px solid var(--line);}
+  .stepline .sl{font-size:14.5px; font-weight:600;} .stepline .ss{color:var(--muted); font-size:12px; margin-top:1px;}
+  .stepper{display:flex; align-items:center; gap:6px; flex:none;}
+  .stepper button{width:38px; height:38px; border-radius:9px; border:1px solid var(--line); background:var(--bg-2); color:var(--ink); font-size:20px; cursor:pointer; line-height:1;}
+  .stepper input{width:58px; text-align:center; background:var(--bg-2); border:1px solid var(--line); color:var(--ink); font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-size:17px; font-weight:500; padding:8px 2px; border-radius:9px; outline:none;}
+  .stepper input:focus{border-color:var(--ember-line);}
+  .soundrow{display:flex; flex-wrap:wrap; gap:8px;}
+  .snd{display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--bg-2); color:var(--ink); font-family:inherit; font-size:14px; padding:9px 13px; border-radius:8px; cursor:pointer;}
+  .snd svg{width:13px; height:13px;}
+  .snd.sel{border-color:var(--ember); color:var(--ember); box-shadow:0 0 12px -4px rgba(var(--accent-rgb),.45);}
+  .btn.big{width:100%; flex:none; padding:16px; font-size:16px; letter-spacing:.04em; margin-top:6px;}
+  .statline{display:flex; gap:10px; margin-top:16px;}
+  .fs-sub{color:var(--muted); font-size:13px; margin-top:14px; min-height:18px;}
+  .phase-pill{display:inline-block; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; padding:4px 12px; border-radius:6px; margin-bottom:10px; color:var(--on-accent); background:var(--ember);}
+  .phase-pill.brk{background:var(--surface-2); color:var(--ember); border:1px solid var(--ember-line);}
+  .cycle-dots{display:flex; gap:7px; justify-content:center; margin-top:14px; min-height:10px;}
+  .cycle-dots i{width:9px; height:9px; border-radius:50%; border:1.5px solid var(--line);}
+  .cycle-dots i.on{background:var(--ember); border-color:var(--ember);} .cycle-dots i.cur{border-color:var(--ember);}
+  button.mark{padding:0; background:transparent; cursor:pointer; font:inherit;}
+  .ring-fg{transition:stroke-dashoffset .26s linear;}
+  .item .itext{cursor:pointer;}
+  /* softer entrances: opacity/transform only */
+  .scrim.open{animation:scrimIn .18s ease both;}
+  .sheet{animation:rise .26s cubic-bezier(.2,.8,.2,1) both;}
+  .focus.open{animation:scrimIn .22s ease both;}
+  @keyframes scrimIn{from{opacity:0;}to{opacity:1;}}
 </style>
 
 </head>
@@ -372,13 +478,17 @@
     <span class="tabwrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg></span>
     Tasks
   </button>
+  <button class="tab" id="tabFocus">
+    <span class="tabwrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg></span>
+    Focus
+  </button>
   <button class="tab" id="tabFree">
     <span class="tabwrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
     Free
   </button>
 </nav>
 
-<!-- add sheet (habit / free / task) -->
+<!-- add / edit sheet (habit / free / task) -->
 <div class="scrim" id="scrim">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
     <div class="sheet-head">
@@ -389,7 +499,7 @@
     </div>
     <div class="field">
       <label id="nameLabel" for="gInput">Name</label>
-      <input type="text" id="gInput" placeholder="Reading" autocomplete="off" maxlength="46">
+      <input type="text" id="gInput" placeholder="Reading" autocomplete="off" maxlength="60">
     </div>
     <div class="field" id="suggestField">
       <label>Suggestions</label>
@@ -403,48 +513,68 @@
       <label>How often do you want to do it?</label>
       <div class="chips" id="freqChips"></div>
     </div>
-    <div class="field" id="pomoField">
-      <div class="toggle" id="pomoToggle"><div><div class="tl">Pomodoro timer</div><div class="ts">Focus in timed sessions</div></div><div class="switch"></div></div>
-      <div id="minWrap" style="margin-top:10px; display:none">
-        <div class="chips" id="minChips"></div>
-        <div class="custom-min"><label for="minCustom">Custom (min)</label><input type="number" id="minCustom" min="1" max="180" placeholder="e.g. 90"></div>
-      </div>
+    <div class="field" id="kindField">
+      <label>What goes inside it?</label>
+      <div class="chips" id="kindChips"></div>
     </div>
-    <div class="field" id="goalField">
-      <div class="toggle" id="goalToggle"><div><div class="tl">Session goal</div><div class="ts">Set an intention each time (e.g. "30 pages")</div></div><div class="switch"></div></div>
+    <div class="field" id="remindField" style="display:none">
+      <div class="toggle" id="remindToggle"><div><div class="tl">Daily reminder</div><div class="ts">A notification at the time you choose</div></div><div class="switch"></div></div>
+      <div id="remindTimeWrap" style="margin-top:10px; display:none"><input type="time" id="remindTime" value="20:00"></div>
     </div>
     <div class="field" id="sinceField" style="display:none">
       <label>How long has it already been?</label>
       <div class="chips" id="sinceChips"></div>
     </div>
-    <div class="field" id="dueField" style="display:none">
-      <label>Due date (optional)</label>
-      <input type="date" id="taskDue">
+    <div id="taskFields" style="display:none">
+      <div class="field two">
+        <div><label for="taskDue">Date</label><input type="date" id="taskDue"></div>
+        <div><label for="taskTime">Time</label><input type="time" id="taskTime"></div>
+      </div>
+      <div class="row-split" style="margin:-8px 0 14px"><button class="linkbtn" id="taskClear" type="button">Clear date and time</button><a class="linkbtn" id="taskGcal" target="_blank" rel="noopener" style="display:none">Add to Google Calendar</a></div>
     </div>
     <div class="actions">
       <button class="btn" id="cancelBtn">Cancel</button>
       <button class="btn primary" id="saveBtn" disabled>Add</button>
     </div>
+    <button class="btn ghost danger" id="editDelete" style="display:none">Delete</button>
   </div>
 </div>
 
-<!-- habit session sheet -->
-<div class="scrim" id="sessionScrim">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sessTitle">
+<!-- habit detail sheet -->
+<div class="scrim" id="habitScrim">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="hTitle">
     <div class="sheet-head">
-      <h3 id="sessTitle">Habit</h3>
-      <button class="sheet-close" id="sessXBtn" aria-label="Close">
+      <h3 id="hTitle">Habit</h3>
+      <button class="sheet-close" id="hXBtn" aria-label="Close">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
-    <span class="sheet-sub" id="sessSub"></span>
-    <div class="field" id="sessGoalField">
-      <label>Your goal for this session</label>
-      <input type="text" id="sessGoal" placeholder="e.g. Read 30 pages" autocomplete="off" maxlength="60">
+    <span class="sheet-sub" id="hSub"></span>
+    <div class="actions" style="margin-top:0">
+      <button class="btn" id="hDone">Mark done today</button>
+      <button class="btn" id="hFocus">Focus on this</button>
+    </div>
+    <div class="field" style="margin-top:20px">
+      <label>What goes inside it?</label>
+      <div class="kind-row" id="hKinds"></div>
+    </div>
+    <div id="hListWrap">
+      <div class="add-row"><input type="text" id="hAddInput" maxlength="80" autocomplete="off"><button id="hAddBtn" aria-label="Add">+</button></div>
+      <div class="items" id="hItems"></div>
+      <div class="row-split"><span class="sess-info" id="hCount" style="margin:0"></span><button class="linkbtn" id="hClearDone">Remove completed</button></div>
+      <div class="toggle" id="hResetToggle" style="margin-top:14px"><div><div class="tl">Start fresh every day</div><div class="ts">Uncheck everything each morning, good for subjects</div></div><div class="switch"></div></div>
+    </div>
+    <div class="field" id="hRemindField" style="display:none; margin-top:18px">
+      <div class="toggle" id="hRemindToggle"><div><div class="tl">Daily reminder</div><div class="ts">A notification at the time you choose</div></div><div class="switch"></div></div>
+      <div id="hRemindWrap" style="margin-top:10px; display:none"><input type="time" id="hRemindTime" value="20:00"></div>
+    </div>
+    <div class="field" style="margin-top:18px">
+      <label for="hName">Name</label>
+      <input type="text" id="hName" maxlength="60" autocomplete="off">
     </div>
     <div class="actions">
-      <button class="btn" id="sessCancel">Cancel</button>
-      <button class="btn primary" id="sessGo">Mark done</button>
+      <button class="btn danger" id="hDelete">Delete habit</button>
+      <button class="btn primary" id="hClose">Done</button>
     </div>
   </div>
 </div>
@@ -460,7 +590,7 @@
     </div>
     <span class="sheet-sub" id="gymDateLabel"></span>
     <div class="field" id="sessField" style="display:none">
-      <label>Session (holiday week? use Upper A, Lower A, Upper B, Lower B)</label>
+      <label>Session (changed plans? pick another one)</label>
       <div class="chips" id="sessChips"></div>
       <div class="sess-info" id="sessInfo"></div>
     </div>
@@ -475,7 +605,7 @@
   </div>
 </div>
 
-<!-- focus timer overlay -->
+<!-- focus session overlay -->
 <div class="focus" id="focus">
   <div class="focus-head">
     <button class="focus-x" id="fClose" aria-label="Close">
@@ -483,7 +613,7 @@
     </button>
   </div>
   <div class="focus-body">
-    <div class="focus-cat" id="fCat"></div>
+    <div><span class="phase-pill" id="fPhase">Focus</span></div>
     <div class="focus-name" id="fName"></div>
     <div class="ring-wrap">
       <svg class="ring" viewBox="0 0 260 260">
@@ -492,13 +622,8 @@
       </svg>
       <div class="ring-time" id="fTime">25:00</div>
     </div>
-    <div id="fIdle">
-      <div class="focus-adjust">
-        <button class="step" id="minus" aria-label="Less time">–</button>
-        <div class="presets" id="presets"></div>
-        <button class="step" id="plus" aria-label="More time">+</button>
-      </div>
-    </div>
+    <div class="cycle-dots" id="fDots"></div>
+    <div class="fs-sub" id="fSub"></div>
     <div class="focus-actions" id="fActions"></div>
     <div class="focus-done" id="fDone">Nicely done.</div>
   </div>
@@ -518,6 +643,24 @@
   ];
   function toneFor(cat){ var c=CATS.find(function(x){return x.id===cat;}); return c?c.tone:"#7E8C88"; }
 
+  // What a habit can hold inside: subjects for Studying, tasks for Working, chapters for Reading, or any checklist.
+  var KINDS=[
+    {id:"none",     label:"Nothing",   noun:"",        add:"",                 empty:""},
+    {id:"subjects", label:"Subjects",  noun:"subject", add:"Add a subject…",   empty:"Add your subjects, e.g. Calculus, Physics."},
+    {id:"tasks",    label:"Tasks",     noun:"task",    add:"Add a task…",      empty:"Add what you want to get done."},
+    {id:"chapters", label:"Chapters",  noun:"chapter", add:"Add a chapter…",   empty:"Add the chapters you plan to read."},
+    {id:"steps",    label:"Checklist", noun:"item",    add:"Add an item…",     empty:"Add the steps for this habit."}
+  ];
+  function kindById(id){ return KINDS.find(function(k){return k.id===id;})||KINDS[0]; }
+  // Suggested list type for a habit name (used for new habits and to upgrade old ones).
+  function guessKind(name){
+    var n=String(name||"").toLowerCase();
+    if(/study|studi|estudi/.test(n)) return {kind:"subjects", reset:true};
+    if(/work|trabaj/.test(n)) return {kind:"tasks", reset:false};
+    if(/read|lectur|libro|book/.test(n)) return {kind:"chapters", reset:false};
+    return {kind:"none", reset:false};
+  }
+
   var SUGGEST=[
     {name:"Reading",cat:"Reading"},{name:"Working",cat:"Work"},{name:"Writing",cat:"Writing"},
     {name:"Studying",cat:"Work"},{name:"Meditate",cat:"Mind"},{name:"Exercise",cat:"Health"},
@@ -529,7 +672,37 @@
     {label:"1 month",ms:30*DAY},{label:"3 months",ms:90*DAY},{label:"6 months",ms:180*DAY},{label:"1 year",ms:365*DAY}
   ];
 
-  // ---------- optional training plan ----------
+  // Alarm sounds. One description drives both the in-app player (Web Audio) and the Android notification
+  // files (tools/make-sounds.mjs reads this block), so they always match.
+  // n = notes: t start (s), f frequency (Hz), d length (s), g gain, p partials [ratio, amplitude], k decay rate, w "q" = square.
+  /*SOUNDS-BEGIN*/
+  var SOUNDS=[
+    {id:"bell",name:"Bell",n:[
+      {t:0,f:880,d:2.4,g:.5,p:[[1,1],[2.76,.45],[5.4,.2]],k:3},
+      {t:.9,f:880,d:2.2,g:.4,p:[[1,1],[2.76,.45],[5.4,.2]],k:3.2}]},
+    {id:"chime",name:"Chime",n:[
+      {t:0,f:1046.5,d:1.8,g:.4,p:[[1,1],[2,.3]],k:3.6},
+      {t:.2,f:1318.5,d:1.8,g:.4,p:[[1,1],[2,.3]],k:3.6},
+      {t:.4,f:1568,d:2.2,g:.42,p:[[1,1],[2,.3]],k:3}]},
+    {id:"marimba",name:"Marimba",n:[
+      {t:0,f:523.25,d:.9,g:.55,p:[[1,1],[4,.35]],k:7},
+      {t:.22,f:659.25,d:.9,g:.55,p:[[1,1],[4,.35]],k:7},
+      {t:.44,f:783.99,d:.9,g:.55,p:[[1,1],[4,.35]],k:7},
+      {t:.66,f:1046.5,d:1.4,g:.6,p:[[1,1],[4,.35]],k:5}]},
+    {id:"digital",name:"Digital",n:[
+      {t:0,f:1000,d:.12,g:.2,p:[[1,1]],k:6,w:"q"},{t:.2,f:1000,d:.12,g:.2,p:[[1,1]],k:6,w:"q"},{t:.4,f:1000,d:.12,g:.2,p:[[1,1]],k:6,w:"q"},
+      {t:1.1,f:1000,d:.12,g:.2,p:[[1,1]],k:6,w:"q"},{t:1.3,f:1000,d:.12,g:.2,p:[[1,1]],k:6,w:"q"},{t:1.5,f:1000,d:.12,g:.2,p:[[1,1]],k:6,w:"q"}]},
+    {id:"pulse",name:"Pulse",n:[
+      {t:0,f:440,d:.5,g:.55,p:[[1,1],[2,.2]],k:4},{t:.45,f:440,d:.5,g:.55,p:[[1,1],[2,.2]],k:4},{t:.9,f:554.4,d:.9,g:.6,p:[[1,1],[2,.2]],k:3}]},
+    {id:"alarm",name:"Alarm",n:[
+      {t:0,f:880,d:.22,g:.22,p:[[1,1]],k:2,w:"q"},{t:.25,f:660,d:.22,g:.22,p:[[1,1]],k:2,w:"q"},
+      {t:.5,f:880,d:.22,g:.22,p:[[1,1]],k:2,w:"q"},{t:.75,f:660,d:.22,g:.22,p:[[1,1]],k:2,w:"q"},
+      {t:1.0,f:880,d:.22,g:.22,p:[[1,1]],k:2,w:"q"},{t:1.25,f:660,d:.3,g:.22,p:[[1,1]],k:2,w:"q"}]}
+  ];
+  /*SOUNDS-END*/
+  function soundById(id){ return SOUNDS.find(function(s){return s.id===id;})||SOUNDS[0]; }
+
+  // ---------- optional training plan (switch on with 5 taps on the logo) ----------
   // Off by default, so everyone gets the plain "log your own exercises" Gym tab.
   // Switch it on or off by tapping the Ember logo 5 times (remembered on this device).
   // Exercise notation: n = name, s = sets, r = rep target, rest = rest time, ss = superset with the neighbour.
@@ -625,26 +798,86 @@
         X("Saco",6,"3 min","1 min",{rounds:1,note:"R1–2: jab, jab, cross. R3–4: jab, cross, hook, cross + side step. R5: body hook, head hook, slip, cross. R6: 30 s hard / 30 s free, 3 times."}),
         X("Core",3,"","",{rounds:1,lab:"laps",note:"Each lap: plank, weighted Russian twists, leg raises. 10 min in total."})
       ]},
+      pushA:{label:"Push A",min:75,info:LIFT+" Emphasis on lateral delts.",ex:[
+        X("Press inclinado con mancuernas",4,"6–10","2–3 min"),
+        X("Elevaciones laterales en polea (a un brazo)",4,"12–15","60–90 s"),
+        X("Press militar sentado con mancuernas",3,"8–10","2 min"),
+        X("Press plano en máquina o fondos",3,"8–12","2 min"),
+        X("Elevaciones laterales con mancuernas",3,"15–20","60 s"),
+        X("Extensión de tríceps en polea (cuerda)",3,"10–12","60–90 s"),
+        X("Extensión de tríceps sobre la cabeza",3,"10–12","60–90 s")
+      ]},
+      pullA:{label:"Pull A",min:90,cardio:"20 min zone 2",info:LIFT+" Then 20 min of zone 2 cardio (about 120–140 bpm, you can still talk).",ex:[
+        X("Dominadas o jalón al pecho",4,"6–10","2–3 min"),
+        X("Remo con barra o remo T",4,"8–10","2 min"),
+        X("Remo en polea baja (agarre neutro)",3,"10–12","90 s"),
+        X("Pullover en polea (brazos rectos)",3,"12–15","60–90 s"),
+        X("Face pull",3,"15–20","60 s"),
+        X("Curl con barra EZ",3,"8–10","90 s"),
+        X("Curl martillo",3,"10–12","60–90 s")
+      ]},
+      legsA:{label:"Legs A",min:80,info:LIFT+" Quad emphasis.",ex:[
+        X("Sentadilla libre o en máquina Smith",4,"6–8","2–3 min"),
+        X("Peso muerto rumano",3,"8–10","2 min"),
+        X("Prensa de piernas",3,"10–12","2 min"),
+        X("Curl femoral sentado",3,"10–12","90 s"),
+        X("Gemelos de pie",4,"10–15","60–90 s"),
+        X("Crunch en polea alta",3,"10–15","60 s"),
+        X("Elevación de piernas colgado",3,"10–15","60 s")
+      ]},
+      pushB:{label:"Push B",min:90,cardio:"20 min zone 2",info:LIFT+" Emphasis on lateral delts. Then 20 min of zone 2 cardio.",ex:[
+        X("Press banca plano con barra",4,"6–8","2–3 min"),
+        X("Elevaciones laterales con mancuernas",4,"12–15","60–90 s"),
+        X("Press de hombro en máquina",3,"8–10","2 min"),
+        X("Cruces en polea o aperturas en máquina",3,"12–15","60–90 s"),
+        X("Elevaciones laterales en polea (bajas, cruzadas)",3,"15–20","60 s"),
+        X("Press francés o fondos en banco",3,"8–12","90 s"),
+        X("Jalón de tríceps con barra recta",3,"10–15","60 s")
+      ]},
+      pullB:{label:"Pull B",min:90,cardio:"20 min zone 2",info:LIFT+" Then 20 min of zone 2 cardio.",ex:[
+        X("Jalón agarre neutro o dominadas lastradas",4,"8–10","2 min"),
+        X("Remo con mancuerna a una mano",3,"8–12","90 s"),
+        X("Remo en máquina con pecho apoyado",3,"10–12","90 s"),
+        X("Pájaros en máquina (deltoides posterior)",4,"12–20","60 s"),
+        X("Encogimientos de trapecio",3,"10–12","60–90 s"),
+        X("Curl inclinado con mancuernas",3,"10–12","90 s"),
+        X("Curl en banco predicador o en polea",3,"10–15","60–90 s")
+      ]},
+      legsB:{label:"Legs B",min:80,info:LIFT+" Hamstring and glute emphasis.",ex:[
+        X("Sentadilla hack o búlgara",3,"8–10","2 min"),
+        X("Hip thrust",3,"8–10","2 min"),
+        X("Curl femoral tumbado",4,"8–12","90 s"),
+        X("Extensión de cuádriceps",3,"12–15","60–90 s"),
+        X("Gemelos sentado",4,"12–15","60 s"),
+        X("Rueda abdominal o plancha lastrada",3,"10–12","60 s",{note:"Plank: 30–45 s."}),
+        X("Crunch inverso",3,"12–15","60 s")
+      ]},
       rest:{label:"Rest",min:0,info:"Total rest day. A walk is fine.",ex:[]}
     };
     return {
-      name:"Bulk Limpio",
+      name:"Personal plan",
       sessions:S,
-      order:["push","pull","legs","upper","lower","upperA","lowerA","upperB","lowerB","boxeo","rest"],
-      byDay:{0:"rest",1:"push",2:"pull",3:"legs",4:"upper",5:"lower",6:"boxeo"}
+      order:["push","pull","legs","upper","lower","upperA","lowerA","upperB","lowerB","pushA","pullA","legsA","pushB","pullB","legsB","boxeo","rest"]
     };
   })();
+  // The weekly routines you can pick in the Gym tab. byDay is keyed by Date.getDay() (0 = Sunday).
+  var ROUTINES={
+    ul4:{ name:"Upper Lower", days:"4 days", byDay:{0:"rest",1:"upperA",2:"lowerA",3:"rest",4:"upperB",5:"lowerB",6:"rest"} },
+    ppl5:{ name:"PPL UL", days:"5 days", byDay:{0:"rest",1:"push",2:"pull",3:"legs",4:"upper",5:"lower",6:"boxeo"} },
+    ppl6:{ name:"PPLPPL", days:"6 days", byDay:{0:"rest",1:"pushA",2:"pullA",3:"legsA",4:"pushB",5:"pullB",6:"legsB"} }
+  };
 
   // ---------- state + migration ----------
-  var state={ habits:[], logs:{}, sessions:{}, free:[], workouts:{}, tasks:[], settings:{unit:"kg"} };
+  function defaultFocus(){ return { mode:"countdown", h:0, m:25, s:0, focus:25, short:5, long:15, cycles:4, auto:true, sound:"bell", habit:null, label:"" }; }
+  var state={ habits:[], logs:{}, sessions:{}, free:[], workouts:{}, tasks:[], settings:{unit:"kg"}, focusStats:{} };
   try{ var raw=localStorage.getItem(KEY); if(raw){ var p=JSON.parse(raw); if(p&&typeof p==="object") state=p; } }catch(e){}
   // migrate older shapes
-  var migratedFromGoals=false;
+  var migrated=false;
   if(!Array.isArray(state.habits)){
     state.habits = Array.isArray(state.goals) ? state.goals.map(function(g){
-      return { id:g.id, name:g.name, category:g.category, freq:7, pomodoro:!!g.minutes, minutes:g.minutes||25, goalEnabled:false, created:g.created||Date.now() };
+      return { id:g.id, name:g.name, category:g.category, freq:7, created:g.created||Date.now() };
     }) : [];
-    migratedFromGoals = Array.isArray(state.goals);
+    migrated = Array.isArray(state.goals);
   }
   if(state.goals) delete state.goals;
   if(!state.logs) state.logs={};
@@ -654,32 +887,58 @@
   if(!state.settings||typeof state.settings!=="object") state.settings={unit:"kg"};
   if(!state.settings.notifiedTasksDate) state.settings.notifiedTasksDate=null;
   if(!state.workouts||typeof state.workouts!=="object") state.workouts={};
-  // migrate workout strings -> {exercises:[],note}
-  var migratedWorkout=false;
+  if(!state.focusStats||typeof state.focusStats!=="object") state.focusStats={};
+  if(!state.settings.routineWeeks||typeof state.settings.routineWeeks!=="object") state.settings.routineWeeks={};
+  if(!state.settings.calMap||typeof state.settings.calMap!=="object") state.settings.calMap={};
+  if(!state.settings.cal||typeof state.settings.cal!=="object") state.settings.cal={on:false,id:null,name:""};
+  (function(){ var d=defaultFocus(), f=state.settings.focus; if(!f||typeof f!=="object"){ state.settings.focus=d; return; } for(var k in d){ if(f[k]===undefined) f[k]=d[k]; } })();
+  // workouts saved as plain strings -> {exercises:[],note}
   Object.keys(state.workouts).forEach(function(d){
     var v=state.workouts[d];
-    if(typeof v==="string"){ state.workouts[d]={exercises:[], note:v}; migratedWorkout=true; }
+    if(typeof v==="string"){ state.workouts[d]={exercises:[], note:v}; migrated=true; }
     else if(v&&!Array.isArray(v.exercises)) v.exercises=[];
   });
+  // habits: every habit can hold a list now. Suggest a sensible kind from the name the first time.
+  state.habits.forEach(function(h){
+    if(h.kind===undefined){ var g=guessKind(h.name); h.kind=g.kind; h.resetDaily=g.reset; migrated=true; }
+    if(!Array.isArray(h.items)) h.items=[];
+    if(h.resetDaily===undefined) h.resetDaily=false;
+  });
+  state.tasks.forEach(function(t){ if(t.done && !t.doneOn){ t.doneOn=t.due||today0(); migrated=true; } });
+  function today0(){ var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 
   var lastSave=0;
   var importing=false;
-  function save(){ if(importing) return; lastSave=Date.now(); try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
-  if(migratedFromGoals || migratedWorkout) save();   // persist migrated shape immediately, don't wait for a user action
+  function save(){
+    if(importing) return;
+    lastSave=Date.now();
+    try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+    try{ scheduleSync(); }catch(e){}
+    try{ scheduleCalSync(); }catch(e){}
+  }
+  if(migrated) save();   // persist the upgraded shape immediately
 
-  // ---------- date helpers ----------
+  // ---------- date + small helpers ----------
+  function $(id){ return document.getElementById(id); }
   function ymd(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
   function today(){ return ymd(new Date()); }
   function daysAgo(n){ var d=new Date(); d.setDate(d.getDate()-n); return ymd(d); }
   function parseYmd(s){ var p=s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
   function daysBetween(a,b){ return Math.round((parseYmd(b)-parseYmd(a))/DAY); }
+  function parseHM(s){ var m=/^(\d{1,2}):(\d{2})$/.exec(s||""); if(!m) return null; var h=+m[1], mi=+m[2]; if(h>23||mi>59) return null; return {h:h,m:mi}; }
+  function clamp(v,lo,hi){ v=parseInt(v,10); if(isNaN(v)) v=lo; return Math.max(lo,Math.min(hi,v)); }
+  function pad2(n){ return String(n).padStart(2,"0"); }
+  function fmtDay(s,opts){ return parseYmd(s).toLocaleDateString(undefined,opts||{weekday:"short",month:"short",day:"numeric"}); }
 
   function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];}); }
   function flameSVG(){ return "<svg class='flame' viewBox='0 0 24 24' aria-hidden='true'><path d='M12 2c1.4 3 5 4.4 5 8.8a5 5 0 0 1-10 0c0-1.7.7-2.8 1.5-3.7C9 8.5 9.2 7.4 9 6.6c1.2.5 2 1.3 2.4 2.4C11.8 7.4 11.2 4.8 12 2z' style='fill:var(--ember)'/></svg>"; }
   function dumbSVG(){ return "<svg class='flame' viewBox='0 0 24 24' fill='none' style='stroke:var(--ember)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6.5 7v10M17.5 7v10M4 9.5v5M20 9.5v5M6.5 12h11'/></svg>"; }
+  function timerSVG(){ return "<svg class='flame' viewBox='0 0 24 24' fill='none' style='stroke:var(--ember)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='13' r='8'/><path d='M12 9v4l2.5 2M9.5 2.5h5'/></svg>"; }
   function checkSVG(){ return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12.5l4.5 4.5L19 7'/></svg>"; }
   function clockSVG(){ return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M12 7v5l3 2'/></svg>"; }
-  function targetSVG(){ return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='9'/><circle cx='12' cy='12' r='5'/><circle cx='12' cy='12' r='1.5' fill='currentColor'/></svg>"; }
+  function bellSVG(){ return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9'/><path d='M13.7 21a2 2 0 0 1-3.4 0'/></svg>"; }
+  function playSVG(){ return "<svg viewBox='0 0 24 24' fill='currentColor'><path d='M7 4.5v15l13-7.5z'/></svg>"; }
+  function moreSVG(){ return "<svg viewBox='0 0 24 24' fill='currentColor'><circle cx='5' cy='12' r='1.8'/><circle cx='12' cy='12' r='1.8'/><circle cx='19' cy='12' r='1.8'/></svg>"; }
   function trashSVG(){ return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7h16M9 7V4.8c0-.44.36-.8.8-.8h4.4c.44 0 .8.36.8.8V7M6 7l1 13.2c.05.98.86 1.8 1.84 1.8h6.32c.98 0 1.79-.82 1.84-1.8L18 7'/><path d='M10 11v6M14 11v6'/></svg>"; }
 
   // ---------- habits ----------
@@ -707,31 +966,67 @@
   function doneTodayCount(){ return state.habits.reduce(function(a,h){ return a+(isDone(h.id,today())?1:0); },0); }
   function bestStreak(){ return state.habits.reduce(function(m,h){ return Math.max(m,habitStreak(h)); },0); }
 
-  function completeHabit(h, goalText, min){
+  function completeHabit(h){
     var t=today();
     if(logsFor(h.id).indexOf(t)===-1) logsFor(h.id).push(t);
-    if((goalText&&goalText.trim())||min){ sessFor(h.id)[t]={ goal:(goalText||"").trim(), min:min||0 }; }
     save();
   }
   function uncompleteHabit(h){
     var t=today(), arr=logsFor(h.id), i=arr.indexOf(t);
     if(i!==-1) arr.splice(i,1);
-    if(sessFor(h.id)[t]) delete sessFor(h.id)[t];
     save();
   }
-  function lastGoal(h){
-    var m=sessFor(h.id), keys=Object.keys(m).sort();
-    return keys.length ? (m[keys[keys.length-1]].goal||"") : "";
+  // focus minutes spent on a habit today (from the Focus tab)
+  function habitFocusToday(h){ var s=state.sessions[h.id]; return (s&&s[today()]&&s[today()].min)||0; }
+  function addHabitFocus(h,min){ var s=sessFor(h.id), t=today(), prev=s[t]||{goal:"",min:0}; s[t]={goal:prev.goal||"",min:(prev.min||0)+min}; }
+
+  // ---- the list inside a habit (subjects, tasks, chapters, checklist) ----
+  function hasList(h){ return (h.kind||"none")!=="none"; }
+  function itemsOf(h){ return Array.isArray(h.items)?h.items:(h.items=[]); }
+  function itemDone(h,it){ return h.resetDaily ? it.doneDay===today() : !!it.done; }
+  function itemsDoneCount(h){ return itemsOf(h).filter(function(it){return itemDone(h,it);}).length; }
+  function toggleItem(h,it){
+    var was=itemDone(h,it);
+    if(h.resetDaily){ it.doneDay=was?null:today(); }
+    else { it.done=!was; it.doneOn=it.done?today():null; }
+    if(!was) completeHabit(h); else save();          // doing part of it counts as doing the habit today
+  }
+  function addItem(h,text){
+    text=String(text||"").trim().slice(0,80); if(!text) return null;
+    var it={ id:"i"+Date.now()+Math.floor(Math.random()*9999), text:text, done:false, doneDay:null, doneOn:null };
+    itemsOf(h).push(it); save(); return it;
+  }
+  function removeItem(h,id){ h.items=itemsOf(h).filter(function(x){return x.id!==id;}); save(); }
+  function clearDoneItems(h){ h.items=itemsOf(h).filter(function(x){return !itemDone(h,x);}); save(); }
+  function itemProgressText(h){
+    var n=itemsOf(h).length; if(!n) return "";
+    return itemsDoneCount(h)+"/"+n+(h.resetDaily?" today":"");
   }
 
   // ---------- gym ----------
   var gymY=new Date().getFullYear(), gymM=new Date().getMonth();
   function planOn(){ return state.settings.plan==="bulk"; }
-  function defaultSession(d){ return PLAN.byDay[parseYmd(d).getDay()]; }
+  function mondayOf(d){ var x=parseYmd(d); x.setDate(x.getDate()-((x.getDay()+6)%7)); return ymd(x); }
+  // Which routine applies to the week a date falls in. Weeks you never picked follow your latest choice
+  // (this week onwards); older weeks keep the original PPL + UL plan so history doesn't change under you.
+  function routineOf(d){
+    var wk=mondayOf(d), r=state.settings.routineWeeks[wk];
+    if(r && ROUTINES[r]) return r;
+    if(wk>=mondayOf(today())){ var df=state.settings.routine; return ROUTINES[df]?df:"ppl5"; }
+    return "ppl5";
+  }
+  function setRoutine(id){
+    if(!ROUTINES[id]) return;
+    state.settings.routine=id;
+    state.settings.routineWeeks[mondayOf(today())]=id;
+    var ks=Object.keys(state.settings.routineWeeks).sort(); while(ks.length>20){ delete state.settings.routineWeeks[ks.shift()]; }
+    save(); renderGym(); toast(ROUTINES[id].name+" for this week");
+  }
+  function defaultSession(d){ return ROUTINES[routineOf(d)].byDay[parseYmd(d).getDay()]; }
   function sessionOf(d){ var w=state.workouts[d]; return (w&&w.session&&PLAN.sessions[w.session])?w.session:defaultSession(d); }
   function togglePlan(){
     state.settings.plan = planOn() ? null : "bulk"; save();
-    toast(planOn() ? PLAN.name+" plan on"+(view==="gym"?"":" — open the Gym tab") : "Plan off — free logging");
+    toast(planOn() ? "Personal plan on"+(view==="gym"?"":" — open the Gym tab") : "Plan off — free logging");
     if(view==="gym") renderGym();
   }
   function workoutOf(d){ return state.workouts[d]; }
@@ -748,24 +1043,43 @@
   }
 
   // ---------- tasks ----------
+  // A task: {id,name,due:"YYYY-MM-DD"|null,time:"HH:MM"|null,done,doneOn,created}
+  function dueAt(t){
+    if(!t.due) return null;
+    var hm=parseHM(t.time), p=t.due.split("-");
+    return new Date(+p[0], +p[1]-1, +p[2], hm?hm.h:23, hm?hm.m:59, 0, 0).getTime();
+  }
+  function isOverdue(t){ var at=dueAt(t); return !t.done && at!==null && at<Date.now(); }
+  function taskDay(t){ return t.due || (t.done ? (t.doneOn||null) : null); }   // the day a task sits on in the calendar
   function taskDueLabel(t){
-    if(!t.due) return "";
-    var diff=daysBetween(today(), t.due);
-    if(diff<0) return {txt:"Overdue", over:true};
-    if(diff===0) return {txt:"Today", over:false};
-    if(diff===1) return {txt:"Tomorrow", over:false};
-    var d=parseYmd(t.due);
-    return {txt:d.toLocaleDateString(undefined,{month:"short",day:"numeric"}), over:false};
+    if(!t.due) return null;
+    var diff=daysBetween(today(), t.due), tm=t.time?(" · "+t.time):"", txt;
+    if(diff===0) txt="Today"; else if(diff===1) txt="Tomorrow"; else if(diff===-1) txt="Yesterday";
+    else txt=fmtDay(t.due,{month:"short",day:"numeric"});
+    return { txt:txt+tm, over:isOverdue(t), soon:!t.done && diff===0 && !isOverdue(t) };
+  }
+  function cmpTasks(a,b){
+    var da=a.due||"9999-99-99", db=b.due||"9999-99-99"; if(da!==db) return da<db?-1:1;
+    var ta=a.time||"99:99", tb=b.time||"99:99"; if(ta!==tb) return ta<tb?-1:1;
+    return (a.created||0)-(b.created||0);
+  }
+  function setTaskDone(t,on){ t.done=!!on; t.doneOn=on?today():null; save(); }
+  function dayTaskKinds(ds){
+    var p=false, d=false;
+    for(var i=0;i<state.tasks.length;i++){ var t=state.tasks[i]; if(taskDay(t)!==ds) continue; if(t.done) d=true; else p=true; if(p&&d) break; }
+    return {p:p,d:d};
   }
 
   // ================= views =================
   var view="habits";
-  var content=document.getElementById("content");
+  var content=$("content");
   function greet(){ var h=new Date().getHours(); return h<5?"Late night":h<12?"Good morning":h<18?"Good afternoon":"Good evening"; }
 
+  function focusToday(){ var s=state.focusStats[today()]; return s||{n:0,min:0}; }
+
   function renderHero(){
-    document.getElementById("greeting").textContent=greet();
-    var hl=document.getElementById("headline"), sl=document.getElementById("streakline");
+    $("greeting").textContent=greet();
+    var hl=$("headline"), sl=$("streakline");
     sl.style.display="none";
     if(view==="habits"){
       var g=state.habits.length, done=doneTodayCount();
@@ -781,9 +1095,13 @@
       sl.style.display="flex"; sl.innerHTML=dumbSVG()+" This week: <b>&nbsp;"+weekWorkouts()+"</b>";
     } else if(view==="tasks"){
       var open=state.tasks.filter(function(t){return !t.done;}).length;
-      var over=state.tasks.filter(function(t){return !t.done && t.due && daysBetween(today(),t.due)<0;}).length;
+      var over=state.tasks.filter(isOverdue).length;
       hl.innerHTML = open===0 ? "No open tasks. Clear head." : "<span class='num'>"+open+"</span> task"+(open===1?"":"s")+" to do.";
       if(over>0){ sl.style.display="flex"; sl.innerHTML="<b style='color:var(--alert)'>"+over+"</b>&nbsp; overdue"; }
+    } else if(view==="focus"){
+      var fs=focusToday();
+      hl.innerHTML = fs.min===0 ? "One thing, full attention." : "<span class='num'>"+fs.min+"</span> min focused today.";
+      if(fs.n>0){ sl.style.display="flex"; sl.innerHTML=timerSVG()+" Sessions today: <b>&nbsp;"+fs.n+"</b>"; }
     } else if(view==="free"){
       var f=state.free.length;
       if(f===0){ hl.textContent="Track time away from what pulls you back."; return; }
@@ -804,14 +1122,17 @@
       card.className="card"+(done?" done":""); card.style.setProperty("--tone",tone);
       card.setAttribute("role","button"); card.setAttribute("tabindex","0");
       card.setAttribute("aria-pressed", done?"true":"false");
+      card.setAttribute("data-id",h.id);
 
       var tags="<span class='tag tone'>"+freqLabel(h.freq||7)+"</span>";
-      if(h.pomodoro) tags+="<span class='tag'>"+clockSVG()+(h.minutes||25)+"m</span>";
-      if(h.goalEnabled) tags+="<span class='tag'>"+targetSVG()+"Goal</span>";
+      var fm=habitFocusToday(h); if(fm>0) tags+="<span class='tag'>"+clockSVG()+fm+"m</span>";
+      if(h.remind) tags+="<span class='tag'>"+bellSVG()+escapeHtml(h.remind)+"</span>";
 
-      var gt=""; var todayGoal=(sessFor(h.id)[today()]||{}).goal;
-      if(todayGoal) gt="<div class='goaltext'>Today: "+escapeHtml(todayGoal)+"</div>";
-
+      var prog="";
+      if(hasList(h) && itemsOf(h).length){
+        var n=itemsOf(h).length, dn=itemsDoneCount(h), k=kindById(h.kind);
+        prog="<div class='prog'><div class='prog-bar'><div class='prog-fill' style='transform:scaleX("+(dn/n)+")'></div></div><span class='prog-txt'>"+dn+"/"+n+" "+k.label.toLowerCase()+(h.resetDaily?" today":"")+"</span></div>";
+      }
       var dots="";
       for(var i=6;i>=0;i--){ dots+="<span class='dot"+(isDone(h.id,daysAgo(i))?" on":"")+(i===0?" today":"")+"'></span>"; }
       var badge = st>0 ? "<span class='streak-badge show'>"+flameSVG()+st+"</span>" : "<span class='streak-badge'></span>";
@@ -819,39 +1140,38 @@
       card.innerHTML=
         "<div class='body'>"+
           "<div class='titlerow'><span class='gname'>"+escapeHtml(h.name)+"</span>"+tags+"</div>"+
-          gt+
+          prog+
           "<div class='week'>"+dots+badge+"</div>"+
         "</div>"+
         "<div class='card-side'>"+
-          "<div class='mark'>"+checkSVG()+"</div>"+
-          "<button class='menu-btn' aria-label='Delete "+escapeHtml(h.name)+"'>"+trashSVG()+"</button>"+
+          "<button class='mark' aria-label='Mark "+escapeHtml(h.name)+" done'>"+checkSVG()+"</button>"+
+          "<button class='more-btn' aria-label='Open "+escapeHtml(h.name)+"'>"+moreSVG()+"</button>"+
         "</div>";
 
       card.addEventListener("click", function(e){
-        if(e.target.closest(".menu-btn")) return;
-        onHabitTap(h);
+        if(e.target.closest(".more-btn")) return;
+        if(e.target.closest(".mark")){ toggleHabitToday(h); return; }
+        if(hasList(h)) openHabit(h); else toggleHabitToday(h);
       });
-      card.addEventListener("keydown", function(e){ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); onHabitTap(h); } });
-      card.querySelector(".menu-btn").addEventListener("click", function(e){ e.stopPropagation(); confirmDeleteHabit(h); });
+      card.addEventListener("keydown", function(e){ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); if(hasList(h)) openHabit(h); else toggleHabitToday(h); } });
+      card.querySelector(".more-btn").addEventListener("click", function(e){ e.stopPropagation(); openHabit(h); });
       list.appendChild(card);
     });
     content.innerHTML=""; content.appendChild(list);
   }
-  function onHabitTap(h){
+  function toggleHabitToday(h){
     if(isDone(h.id,today())){ uncompleteHabit(h); renderHabits(); renderHero(); return; }
-    if(!h.goalEnabled && !h.pomodoro){ completeHabit(h,"",0); renderAndPulseHabit(h.id); return; }
-    openSession(h);
+    completeHabit(h); renderAndPulseHabit(h.id);
   }
   function renderAndPulseHabit(id){
     renderHabits();
-    var idx=state.habits.findIndex(function(h){return h.id===id;});
-    var cards=content.querySelectorAll(".card");
-    if(idx>=0 && cards[idx] && cards[idx].classList.contains("done")){ var m=cards[idx].querySelector(".mark"); if(m) m.classList.add("pulse"); }
+    var card=content.querySelector(".card[data-id='"+id+"']");
+    if(card && card.classList.contains("done")){ var m=card.querySelector(".mark"); if(m) m.classList.add("pulse"); }
     renderHero();
   }
   function renderEmptyHabits(){
     var wrap=document.createElement("div"); wrap.className="empty";
-    wrap.innerHTML="<h2>Start with one habit.</h2><p>Pick something you want to do regularly. Tap to set how often, a focus timer, or a session goal.</p>";
+    wrap.innerHTML="<h2>Start with one habit.</h2><p>Pick something you want to do regularly. Open it to keep a list inside: subjects, tasks, chapters.</p>";
     var row=document.createElement("div"); row.className="starters";
     SUGGEST.slice(0,6).forEach(function(s){
       var b=document.createElement("button"); b.className="starter"; b.style.setProperty("--tone",toneFor(s.cat));
@@ -862,13 +1182,92 @@
     wrap.appendChild(row); content.innerHTML=""; content.appendChild(wrap);
   }
 
+  // ---- habit detail sheet ----
+  var habitScrim=$("habitScrim"), curHabit=null, hRemindOn=false;
+  function remindInto(on,timeEl,wrapEl,toggleEl,val){
+    toggleEl.classList.toggle("on",!!on); wrapEl.style.display=on?"":"none"; if(val) timeEl.value=val;
+  }
+  function openHabit(h){
+    curHabit=h;
+    $("hTitle").textContent=h.name;
+    $("hName").value=h.name;
+    $("hRemindField").style.display=isNative()?"":"none";
+    hRemindOn=!!parseHM(h.remind);
+    remindInto(hRemindOn,$("hRemindTime"),$("hRemindWrap"),$("hRemindToggle"),h.remind||"20:00");
+    refreshHabitSheet();
+    habitScrim.classList.add("open");
+  }
+  function refreshHabitSheet(){
+    var h=curHabit; if(!h) return;
+    var st=habitStreak(h), done=isDone(h.id,today());
+    var sub=[freqLabel(h.freq||7)]; if(st>0) sub.push(st+"-day streak"); var fm=habitFocusToday(h); if(fm>0) sub.push(fm+" min focused today");
+    $("hSub").textContent=sub.join(" · ");
+    var db=$("hDone"); db.textContent=done?"Done today ✓":"Mark done today"; db.classList.toggle("primary",!done);
+    chipRow($("hKinds"), KINDS.map(function(k){return {label:k.label,val:k.id};}), function(o){return o.val===(h.kind||"none");}, function(o){
+      h.kind=o.val; if(o.val==="subjects" && h.resetDaily===false && !itemsOf(h).length) h.resetDaily=true; save(); refreshHabitSheet(); render();
+    });
+    var k=kindById(h.kind), has=hasList(h);
+    $("hListWrap").style.display=has?"":"none";
+    if(has){
+      $("hAddInput").placeholder=k.add;
+      $("hResetToggle").classList.toggle("on",!!h.resetDaily);
+      var box=$("hItems"); box.innerHTML="";
+      var its=itemsOf(h);
+      if(!its.length){ var em=document.createElement("div"); em.className="sess-info"; em.textContent=k.empty; box.appendChild(em); }
+      its.forEach(function(it){
+        var d=itemDone(h,it), row=document.createElement("div"); row.className="item"+(d?" done":"");
+        row.innerHTML="<button class='icheck' aria-label='Toggle'>"+checkSVG()+"</button><span class='itext'>"+escapeHtml(it.text)+"</span><button class='idel' aria-label='Remove'>&#215;</button>";
+        row.querySelector(".icheck").addEventListener("click", function(){ toggleItem(h,it); refreshHabitSheet(); render(); });
+        row.querySelector(".itext").addEventListener("click", function(){ toggleItem(h,it); refreshHabitSheet(); render(); });
+        row.querySelector(".idel").addEventListener("click", function(){ removeItem(h,it.id); refreshHabitSheet(); render(); });
+        box.appendChild(row);
+      });
+      $("hCount").textContent=its.length?itemProgressText(h):"";
+      $("hClearDone").style.display=its.some(function(x){return itemDone(h,x);})?"":"none";
+    }
+  }
+  function closeHabit(){
+    var h=curHabit;
+    if(h){
+      var nm=$("hName").value.trim(); if(nm && nm!==h.name){ h.name=nm.slice(0,60); }
+      if(isNative()){ var v=hRemindOn?($("hRemindTime").value||"20:00"):null; h.remind=(v&&parseHM(v))?v:null; }
+      save();
+    }
+    habitScrim.classList.remove("open"); curHabit=null; render();
+  }
+  function addItemFromInput(){
+    var h=curHabit; if(!h) return; var inp=$("hAddInput");
+    if(addItem(h,inp.value)){ inp.value=""; refreshHabitSheet(); render(); inp.focus(); }
+  }
+  $("hAddBtn").addEventListener("click", addItemFromInput);
+  $("hAddInput").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); addItemFromInput(); } });
+  $("hClearDone").addEventListener("click", function(){ if(curHabit){ clearDoneItems(curHabit); refreshHabitSheet(); render(); } });
+  $("hResetToggle").addEventListener("click", function(){ var h=curHabit; if(!h) return; h.resetDaily=!h.resetDaily; if(h.resetDaily){ itemsOf(h).forEach(function(it){ it.doneDay=it.done?today():null; }); } else { itemsOf(h).forEach(function(it){ it.done=(it.doneDay===today()); }); } save(); refreshHabitSheet(); render(); });
+  $("hRemindToggle").addEventListener("click", function(){ hRemindOn=!hRemindOn; remindInto(hRemindOn,$("hRemindTime"),$("hRemindWrap"),$("hRemindToggle")); });
+  $("hDone").addEventListener("click", function(){ var h=curHabit; if(!h) return; if(isDone(h.id,today())) uncompleteHabit(h); else completeHabit(h); refreshHabitSheet(); render(); });
+  $("hFocus").addEventListener("click", function(){ var h=curHabit; if(!h) return; state.settings.focus.habit=h.id; save(); closeHabit(); setView("focus"); });
+  $("hDelete").addEventListener("click", function(){ var h=curHabit; if(!h) return; if(confirm('Delete "'+h.name+'"? Its history will be removed.')){ state.habits=state.habits.filter(function(x){return x.id!==h.id;}); delete state.logs[h.id]; delete state.sessions[h.id]; if(state.settings.focus.habit===h.id) state.settings.focus.habit=null; save(); curHabit=null; habitScrim.classList.remove("open"); render(); } });
+  $("hClose").addEventListener("click", closeHabit);
+  $("hXBtn").addEventListener("click", closeHabit);
+  habitScrim.addEventListener("click", function(e){ if(e.target===habitScrim) closeHabit(); });
+
   // ---- gym view ----
+  function sessLabel(id){ var s=PLAN.sessions[id]; return s?s.label:id; }
   function todayCardHTML(){
-    var t=today(), s=PLAN.sessions[sessionOf(t)], done=hasWorkout(t);
+    var t=today(), s=PLAN.sessions[sessionOf(t)], done=hasWorkout(t), r=ROUTINES[routineOf(t)];
     var sub = s.ex.length ? s.ex.length+" "+(s.unit||"exercises")+" · ~"+s.min+" min" : "Rest day";
-    return "<div class='today-card"+(done?" done":"")+"' data-d='"+t+"'><div><div class='tc-l'>Today · "+escapeHtml(PLAN.name)+"</div>"+
+    if(s.cardio) sub+=" · + cardio "+s.cardio.split(" ")[0]+" min";
+    return "<div class='today-card"+(done?" done":"")+"' data-d='"+t+"'><div><div class='tc-l'>Today · "+escapeHtml(r.name)+"</div>"+
       "<div class='tc-n'>"+escapeHtml(s.label)+"</div><div class='tc-s'>"+sub+"</div></div>"+
       "<span class='tc-go'>"+(done?"Edit":"Log")+" →</span></div>";
+  }
+  function routineCardHTML(){
+    var cur=routineOf(today()), r=ROUTINES[cur];
+    var chips=Object.keys(ROUTINES).map(function(id){ var x=ROUTINES[id];
+      return "<button class='chip"+(id===cur?" sel":"")+"' data-r='"+id+"'>"+escapeHtml(x.name)+" · "+x.days+"</button>"; }).join("");
+    var names=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], order=[1,2,3,4,5,6,0];
+    var wk=order.map(function(d,i){ return names[i]+" "+escapeHtml(sessLabel(r.byDay[d])); }).join(" · ");
+    return "<div class='panel'><h4>Routine this week</h4><div class='chips'>"+chips+"</div><div class='sess-info'>"+wk+"</div></div>";
   }
   function renderGym(){
     var el=document.createElement("div");
@@ -893,45 +1292,151 @@
         return "<div class='recent-row' data-d='"+d+"'><span class='rd'>"+lab+"</span><span class='rt'>"+escapeHtml(workoutSummary(d))+"</span></div>";
       }).join("")+"</div>";
     } else recent="<p class='recent-title'>Tap any day to log your workout.</p>";
-    var top = planOn() ? todayCardHTML() : "";
-    var foot = planOn() ? "<p class='hint'>"+escapeHtml(PLAN.name)+" plan is on. <a id='planOff'>Turn off</a></p>" : "";
+    var top = planOn() ? todayCardHTML()+routineCardHTML() : "";
+    var foot = planOn() ? "<p class='hint'>Personal plan is on. <a id='planOff'>Turn off</a></p>" : "";
     el.innerHTML=top+stats+cal+recent+foot; content.innerHTML=""; content.appendChild(el);
     el.querySelectorAll(".cal-cell[data-d]").forEach(function(c){ c.addEventListener("click", function(){ openGymEditor(c.getAttribute("data-d")); }); });
     el.querySelectorAll(".cal-nav button").forEach(function(bt){ bt.addEventListener("click", function(){ gymM+=parseInt(bt.getAttribute("data-nav"),10); if(gymM<0){gymM=11;gymY--;} if(gymM>11){gymM=0;gymY++;} renderGym(); }); });
     el.querySelectorAll(".recent-row").forEach(function(r){ r.addEventListener("click", function(){ openGymEditor(r.getAttribute("data-d")); }); });
     el.querySelectorAll(".today-card").forEach(function(c){ c.addEventListener("click", function(){ openGymEditor(c.getAttribute("data-d")); }); });
+    el.querySelectorAll("[data-r]").forEach(function(c){ c.addEventListener("click", function(){ setRoutine(c.getAttribute("data-r")); }); });
     var po=el.querySelector("#planOff"); if(po) po.addEventListener("click", togglePlan);
   }
 
   // ---- tasks view ----
+  var taskY=new Date().getFullYear(), taskM=new Date().getMonth(), taskSel=null, calChoices=null;
+  function taskCalendarHTML(){
+    var monthName=new Date(taskY,taskM,1).toLocaleDateString(undefined,{month:"long",year:"numeric"});
+    var first=new Date(taskY,taskM,1), startWd=(first.getDay()+6)%7, dim=new Date(taskY,taskM+1,0).getDate();
+    var wdRow=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(function(w){return "<span>"+w+"</span>";}).join("");
+    var t=today(), cells="";
+    for(var b=0;b<startWd;b++) cells+="<div class='cal-cell blank'></div>";
+    for(var day=1;day<=dim;day++){
+      var ds=ymd(new Date(taskY,taskM,day)), k=dayTaskKinds(ds);
+      cells+="<div class='cal-cell"+(ds===t?" today":"")+(ds===taskSel?" sel":"")+"' data-d='"+ds+"'><span class='cd'>"+day+"</span><span class='cdots'>"+
+        (k.p?"<i class='cdot2 p'></i>":"")+(k.d?"<i class='cdot2 d'></i>":"")+"</span></div>";
+    }
+    return "<div class='cal'><div class='cal-head'><div class='cal-title'>"+monthName+"</div>"+
+      "<div class='cal-nav'><button data-nav='-1' aria-label='Previous month'>&#8249;</button><button data-nav='1' aria-label='Next month'>&#8250;</button></div></div>"+
+      "<div class='cal-wd'>"+wdRow+"</div><div class='cal-grid'>"+cells+"</div>"+
+      "<div class='legend'><span><i style='background:var(--pend)'></i>Pending</span><span><i style='background:var(--okc)'></i>Completed</span></div></div>";
+  }
   function renderTasks(){
-    if(state.tasks.length===0){
-      var wrap=document.createElement("div"); wrap.className="empty";
-      wrap.innerHTML="<h2>No tasks yet.</h2><p>Add something you need to get done. Give it a due date, then tap it to focus with a timer.</p>";
-      content.innerHTML=""; content.appendChild(wrap); return;
-    }
-    var open=state.tasks.filter(function(t){return !t.done;});
-    var done=state.tasks.filter(function(t){return t.done;});
-    open.sort(function(a,b){ if(!a.due&&!b.due) return a.created-b.created; if(!a.due) return 1; if(!b.due) return -1; return a.due<b.due?-1:(a.due>b.due?1:0); });
     var frag=document.createElement("div");
-    var list=document.createElement("div"); list.className="list";
-    open.forEach(function(t){ list.appendChild(taskRow(t)); });
-    frag.appendChild(list);
-    if(done.length){
-      var h=document.createElement("div"); h.className="subhead"; h.textContent="Done"; frag.appendChild(h);
-      var dl=document.createElement("div"); dl.className="list"; done.forEach(function(t){ dl.appendChild(taskRow(t)); }); frag.appendChild(dl);
+    frag.innerHTML=taskCalendarHTML();
+    var shown;
+    if(taskSel){
+      shown=state.tasks.filter(function(t){ return taskDay(t)===taskSel; });
+      var hd=document.createElement("div"); hd.className="day-head";
+      hd.innerHTML="<b>"+escapeHtml(fmtDay(taskSel,{weekday:"long",month:"long",day:"numeric"}))+"</b><button class='linkbtn' id='showAll'>Show all</button>";
+      frag.appendChild(hd);
+    } else shown=state.tasks;
+    var open=shown.filter(function(t){return !t.done;}).sort(cmpTasks);
+    var done=shown.filter(function(t){return t.done;}).sort(function(a,b){ return (b.doneOn||"")<(a.doneOn||"")?-1:1; });
+    if(!shown.length){
+      var wrap=document.createElement("div"); wrap.className="empty";
+      wrap.innerHTML=taskSel ? "<p>Nothing on this day.</p><div class='starters'><button class='starter' id='addForDay'>+ Add a task for this day</button></div>"
+        : "<h2>No tasks yet.</h2><p>Add something you need to get done, with a date and a time if it has one.</p>";
+      frag.appendChild(wrap);
+    } else {
+      if(open.length){ var list=document.createElement("div"); list.className="list"; open.forEach(function(t){ list.appendChild(taskRow(t)); }); frag.appendChild(list); }
+      if(done.length){
+        var h=document.createElement("div"); h.className="subhead"; h.textContent="Done"; frag.appendChild(h);
+        var dl=document.createElement("div"); dl.className="list"; done.slice(0,taskSel?100:30).forEach(function(t){ dl.appendChild(taskRow(t)); }); frag.appendChild(dl);
+      }
     }
+    frag.appendChild(syncBoxEl());
     content.innerHTML=""; content.appendChild(frag);
+    content.querySelectorAll(".cal-cell[data-d]").forEach(function(c){ c.addEventListener("click", function(){ var d=c.getAttribute("data-d"); taskSel=(taskSel===d)?null:d; renderTasks(); }); });
+    content.querySelectorAll(".cal-nav button").forEach(function(bt){ bt.addEventListener("click", function(){ taskM+=parseInt(bt.getAttribute("data-nav"),10); if(taskM<0){taskM=11;taskY--;} if(taskM>11){taskM=0;taskY++;} renderTasks(); }); });
+    var sa=$("showAll"); if(sa) sa.addEventListener("click", function(){ taskSel=null; renderTasks(); });
+    var ad=$("addForDay"); if(ad) ad.addEventListener("click", function(){ openSheet("task",{due:taskSel}); });
   }
   function taskRow(t){
     var row=document.createElement("div"); row.className="task"+(t.done?" done":"");
     var due=taskDueLabel(t);
-    var dueHtml = due ? "<span class='tdue"+(due.over&&!t.done?" over":"")+"'>"+escapeHtml(due.txt)+"</span>" : "";
-    row.innerHTML="<div class='tcheck'>"+checkSVG()+"</div><span class='tname'>"+escapeHtml(t.name)+"</span>"+dueHtml+"<button class='tdel' aria-label='Delete'>"+trashSVG()+"</button>";
-    row.querySelector(".tcheck").addEventListener("click", function(e){ e.stopPropagation(); t.done=!t.done; save(); renderTasks(); renderHero(); });
+    var dueHtml = due ? "<span class='tdue"+(due.over&&!t.done?" over":(due.soon?" soon":""))+"'>"+escapeHtml(due.txt)+"</span>" : "";
+    row.innerHTML="<div class='tcheck'>"+checkSVG()+"</div><div class='tmain'><span class='tname'>"+escapeHtml(t.name)+"</span>"+dueHtml+"</div><button class='tdel' aria-label='Delete'>"+trashSVG()+"</button>";
+    row.querySelector(".tcheck").addEventListener("click", function(e){ e.stopPropagation(); setTaskDone(t,!t.done); renderTasks(); renderHero(); });
     row.querySelector(".tdel").addEventListener("click", function(e){ e.stopPropagation(); state.tasks=state.tasks.filter(function(x){return x.id!==t.id;}); save(); renderTasks(); renderHero(); });
-    row.addEventListener("click", function(){ if(t.done) return; openTimer({ title:t.name, catLabel:"Task", cat:toneFor("Work"), minutes:25, onComplete:function(){ toast("Focus session complete"); } }); });
+    row.addEventListener("click", function(){ openSheet("task",{edit:t}); });
     return row;
+  }
+
+  // ---- focus tab (set-up screen; the running timer is the overlay below) ----
+  function fcfg(){ return state.settings.focus; }
+  function cdSeconds(){ var f=fcfg(); return f.h*3600+f.m*60+f.s; }
+  function fmtHMS(sec){ var h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), s=sec%60; return (h?h+":"+pad2(m):m)+":"+pad2(s); }
+  function pomoSummary(){
+    var f=fcfg(), set=f.focus*f.cycles+f.short*(f.cycles-1)+f.long;
+    return f.cycles+" × "+f.focus+" min focus, "+f.short+" min short breaks, then a "+f.long+" min long break. One round is "+Math.floor(set/60)+"h "+(set%60)+"m.";
+  }
+  function stepLine(key,label,sub,lo,hi){
+    return "<div class='stepline'><div><div class='sl'>"+label+"</div><div class='ss'>"+sub+"</div></div><div class='stepper'><button data-step='"+key+"' data-d='-1' aria-label='Less'>–</button><input type='number' inputmode='numeric' data-key='"+key+"' data-lo='"+lo+"' data-hi='"+hi+"' value='"+fcfg()[key]+"'><button data-step='"+key+"' data-d='1' aria-label='More'>+</button></div></div>";
+  }
+  function renderFocus(){
+    var f=fcfg(), el=document.createElement("div");
+    var html="<div class='seg'><button data-mode='countdown' class='"+(f.mode==="countdown"?"on":"")+"'>Countdown</button><button data-mode='pomodoro' class='"+(f.mode==="pomodoro"?"on":"")+"'>Pomodoro</button></div>";
+    if(f.mode==="countdown"){
+      html+="<div class='panel'><div class='hms'>"+
+        "<div class='u'><input type='number' inputmode='numeric' data-hms='h' min='0' max='23' value='"+f.h+"'><span>hours</span></div><span class='colon'>:</span>"+
+        "<div class='u'><input type='number' inputmode='numeric' data-hms='m' min='0' max='59' value='"+pad2(f.m)+"'><span>min</span></div><span class='colon'>:</span>"+
+        "<div class='u'><input type='number' inputmode='numeric' data-hms='s' min='0' max='59' value='"+pad2(f.s)+"'><span>sec</span></div></div>"+
+        "<div class='total' id='cdTotal'></div>"+
+        "<div class='pre'>"+[5,10,15,20,25,30,45,60,90,120].map(function(v){ return "<button class='preset' data-pre='"+v+"'>"+v+"m</button>"; }).join("")+"</div></div>";
+    } else {
+      html+="<div class='panel'>"+
+        stepLine("focus","Focus","Minutes of work",1,180)+
+        stepLine("short","Short break","Between focus rounds",1,60)+
+        stepLine("long","Long break","After the last round",1,120)+
+        stepLine("cycles","Rounds","Focus rounds before the long break",1,12)+
+        "<div class='total' id='pomoTotal' style='text-align:left;margin-top:10px'></div>"+
+        "<div class='toggle"+(f.auto?" on":"")+"' id='autoToggle' style='margin-top:14px'><div><div class='tl'>Start next phase automatically</div><div class='ts'>Off: wait for you after each phase</div></div><div class='switch'></div></div></div>";
+    }
+    // what are you working on
+    html+="<div class='panel'><h4>Working on (optional)</h4><div class='chips' id='fHabits'></div>"+
+      "<div class='field' style='margin:12px 0 0'><input type='text' id='fLabel' placeholder='e.g. Calculus problem set' maxlength='50' value='"+escapeHtml(f.label||"")+"'></div></div>";
+    // sounds
+    html+="<div class='panel'><h4>Alarm sound</h4><div class='soundrow' id='fSounds'></div></div>";
+    html+="<button class='btn primary big' id='fStart'>Start "+(f.mode==="countdown"?"countdown":"pomodoro")+"</button>";
+    var fs=focusToday();
+    html+="<div class='statline'><div class='stat'><div class='n'>"+fs.min+"</div><div class='l'>min today</div></div><div class='stat'><div class='n'>"+fs.n+"</div><div class='l'>sessions today</div></div></div>";
+    el.innerHTML=html; content.innerHTML=""; content.appendChild(el);
+
+    el.querySelectorAll("[data-mode]").forEach(function(b){ b.addEventListener("click", function(){ fcfg().mode=b.getAttribute("data-mode"); save(); renderFocus(); }); });
+    // countdown fields
+    var upd=function(){ var t=$("cdTotal"); if(t) t.innerHTML="Counts down <b>"+fmtHMS(cdSeconds())+"</b>"; var s=$("pomoTotal"); if(s) s.textContent=pomoSummary(); };
+    el.querySelectorAll("[data-hms]").forEach(function(inp){
+      inp.addEventListener("input", function(){ var k=inp.getAttribute("data-hms"); fcfg()[k]=clamp(inp.value,0,k==="h"?23:59); if(cdSeconds()<1) fcfg().s=1; save(); upd(); });
+      inp.addEventListener("blur", function(){ var k=inp.getAttribute("data-hms"); inp.value=k==="h"?fcfg()[k]:pad2(fcfg()[k]); });
+      inp.addEventListener("focus", function(){ try{ inp.select(); }catch(e){} });
+    });
+    el.querySelectorAll("[data-pre]").forEach(function(b){ b.addEventListener("click", function(){ var v=+b.getAttribute("data-pre"); fcfg().h=Math.floor(v/60); fcfg().m=v%60; fcfg().s=0; save(); renderFocus(); }); });
+    // pomodoro fields
+    el.querySelectorAll("input[data-key]").forEach(function(inp){
+      var k=inp.getAttribute("data-key"), lo=+inp.getAttribute("data-lo"), hi=+inp.getAttribute("data-hi");
+      inp.addEventListener("input", function(){ if(inp.value==="") return; fcfg()[k]=clamp(inp.value,lo,hi); save(); upd(); });
+      inp.addEventListener("blur", function(){ inp.value=fcfg()[k]; });
+      inp.addEventListener("focus", function(){ try{ inp.select(); }catch(e){} });
+    });
+    el.querySelectorAll("[data-step]").forEach(function(b){
+      b.addEventListener("click", function(){ var k=b.getAttribute("data-step"), inp=el.querySelector("input[data-key='"+k+"']"); var lo=+inp.getAttribute("data-lo"), hi=+inp.getAttribute("data-hi");
+        fcfg()[k]=clamp(fcfg()[k]+(+b.getAttribute("data-d")),lo,hi); inp.value=fcfg()[k]; save(); upd(); });
+    });
+    var at=$("autoToggle"); if(at) at.addEventListener("click", function(){ fcfg().auto=!fcfg().auto; save(); at.classList.toggle("on",fcfg().auto); });
+    // habit chips
+    var hb=$("fHabits"), opts=[{label:"Nothing",val:null}].concat(state.habits.map(function(h){return {label:h.name,val:h.id,tone:toneFor(h.category)};}));
+    chipRow(hb, opts, function(o){return (o.val||null)===(fcfg().habit||null);}, function(o){ fcfg().habit=o.val; save(); renderFocus(); }, function(o){return o.tone||"var(--muted-dim)";});
+    $("fLabel").addEventListener("input", function(e){ fcfg().label=e.target.value; save(); });
+    // sounds
+    var sb=$("fSounds");
+    SOUNDS.forEach(function(s){
+      var b=document.createElement("button"); b.className="snd"+(s.id===fcfg().sound?" sel":""); b.innerHTML=playSVG()+escapeHtml(s.name);
+      b.addEventListener("click", function(){ fcfg().sound=s.id; save(); ensureAudio(); playSound(s.id); sb.querySelectorAll(".snd").forEach(function(x){ x.classList.toggle("sel", x===b); }); });
+      sb.appendChild(b);
+    });
+    $("fStart").addEventListener("click", startFocusSession);
+    upd();
   }
 
   // ---- free view ----
@@ -955,7 +1460,7 @@
         "<div class='free-count'><span class='free-days' data-days>0</span><span class='free-dlabel' data-dlabel>days free</span></div>"+
         "<div class='free-clock' data-clock>00:00:00</div>"+
         "<div class='bar-label'><span data-nextlabel></span><span data-pct></span></div>"+
-        "<div class='bar'><div class='bar-fill' data-fill style='width:0%'></div></div>"+
+        "<div class='bar'><div class='bar-fill' data-fill style='transform:scaleX(0)'></div></div>"+
         "<div class='miles' data-miles></div>"+
         "<div class='free-actions'><button class='free-reset'>I slipped — reset</button><button class='free-del' aria-label='Delete'>"+trashSVG()+"</button></div>";
       el.querySelector(".free-reset").addEventListener("click", function(){ resetFree(item); });
@@ -979,7 +1484,7 @@
       var mi=milestoneInfo(elapsed);
       root.querySelector("[data-nextlabel]").textContent=mi.done?"All milestones reached":("Next: "+mi.label);
       root.querySelector("[data-pct]").textContent=Math.floor(mi.frac*100)+"%";
-      root.querySelector("[data-fill]").style.width=(mi.frac*100)+"%";
+      root.querySelector("[data-fill]").style.transform="scaleX("+mi.frac+")";
       root.querySelectorAll(".mile").forEach(function(chip){ if(elapsed>=+chip.getAttribute("data-mms")) chip.classList.add("hit"); else chip.classList.remove("hit"); });
     });
     if(changed && Date.now()-lastSave>10000) save();
@@ -987,114 +1492,108 @@
   function resetFree(item){ if(confirm('Reset "'+item.name+'" to zero?\n\nYour best run is kept. Slipping is part of it — what matters is starting again.')){ var el=Date.now()-item.start; if(el>(item.best||0)) item.best=el; item.start=Date.now(); save(); renderFree(); renderHero(); toast("Fresh start. The clock's running again."); } }
   function addFree(name,sinceMs){ state.free.push({ id:"f"+Date.now()+Math.floor(Math.random()*999), name:name, start:Date.now()-(sinceMs||0), best:sinceMs||0 }); save(); if(view==="free") renderFree(); renderHero(); toast("Counter started. Keep it going."); }
 
-  // ================= add sheet =================
-  var scrim=document.getElementById("scrim"), gInput=document.getElementById("gInput"), saveBtn=document.getElementById("saveBtn");
-  var addMode="habit", pickedCat="Reading", pickedFreq=7, pickedPomo=false, pickedMin=25, pickedGoal=false, pickedSince=0;
+  // ================= add / edit sheet =================
+  var scrim=$("scrim"), gInput=$("gInput"), saveBtn=$("saveBtn");
+  var addMode="habit", pickedCat="Reading", pickedFreq=7, pickedKind="none", kindTouched=false, pickedSince=0, editTask=null, remindOn=false;
 
   function chipRow(box, opts, isSel, onPick, toneOf){
     box.innerHTML="";
     opts.forEach(function(o){
       var b=document.createElement("button"); b.className="chip"+(isSel(o)?" sel":"");
       if(toneOf) b.style.setProperty("--tone",toneOf(o));
-      b.innerHTML=(toneOf?"<span class='swatch'></span>":"")+o.label;
+      b.innerHTML=(toneOf?"<span class='swatch'></span>":"")+escapeHtml(o.label);
       b.addEventListener("click", function(){ onPick(o); });
       box.appendChild(b);
     });
   }
-  function buildCat(){ chipRow(document.getElementById("chips"), CATS.map(function(c){return {label:c.id,val:c.id,tone:c.tone};}),
+  function buildCat(){ chipRow($("chips"), CATS.map(function(c){return {label:c.id,val:c.id,tone:c.tone};}),
     function(o){return o.val===pickedCat;}, function(o){ pickedCat=o.val; buildCat(); }, function(o){return o.tone;}); }
   function buildFreq(){ var opts=[{label:"Daily",val:7},{label:"5×/wk",val:5},{label:"4×/wk",val:4},{label:"3×/wk",val:3},{label:"2×/wk",val:2},{label:"Weekly",val:1}];
-    chipRow(document.getElementById("freqChips"), opts, function(o){return o.val===pickedFreq;}, function(o){ pickedFreq=o.val; buildFreq(); }); }
-  var MIN_CAP=180;
-  function buildMin(){ var opts=[{label:"10 min",val:10},{label:"15 min",val:15},{label:"20 min",val:20},{label:"25 min",val:25},{label:"30 min",val:30},{label:"45 min",val:45},{label:"60 min",val:60},{label:"90 min",val:90},{label:"120 min",val:120}];
-    chipRow(document.getElementById("minChips"), opts, function(o){return o.val===pickedMin;}, function(o){ pickedMin=o.val; buildMin(); syncMinCustom(); });
-    syncMinCustom(); }
-  function syncMinCustom(){ var inp=document.getElementById("minCustom"); if(document.activeElement!==inp) inp.value=pickedMin; }
+    chipRow($("freqChips"), opts, function(o){return o.val===pickedFreq;}, function(o){ pickedFreq=o.val; buildFreq(); }); }
+  function buildKind(){ chipRow($("kindChips"), KINDS.map(function(k){return {label:k.label,val:k.id};}), function(o){return o.val===pickedKind;}, function(o){ pickedKind=o.val; kindTouched=true; buildKind(); }); }
   function buildSince(){ var opts=[{label:"Just now",val:0},{label:"1 day",val:1*DAY},{label:"3 days",val:3*DAY},{label:"1 week",val:7*DAY},{label:"1 month",val:30*DAY}];
-    chipRow(document.getElementById("sinceChips"), opts, function(o){return o.val===pickedSince;}, function(o){ pickedSince=o.val; buildSince(); }); }
-  function buildSuggest(){ var box=document.getElementById("suggestChips"); box.innerHTML="";
+    chipRow($("sinceChips"), opts, function(o){return o.val===pickedSince;}, function(o){ pickedSince=o.val; buildSince(); }); }
+  function guessFromName(){ if(kindTouched||addMode!=="habit") return; var g=guessKind(gInput.value).kind; if(g!==pickedKind){ pickedKind=g; buildKind(); } }
+  function buildSuggest(){ var box=$("suggestChips"); box.innerHTML="";
     SUGGEST.forEach(function(s){ var b=document.createElement("button"); b.className="chip"; b.style.setProperty("--tone",toneFor(s.cat)); b.innerHTML="<span class='swatch'></span>"+s.name;
-      b.addEventListener("click", function(){ gInput.value=s.name; pickedCat=s.cat; buildCat(); saveBtn.disabled=false; }); box.appendChild(b); }); }
+      b.addEventListener("click", function(){ gInput.value=s.name; pickedCat=s.cat; buildCat(); saveBtn.disabled=false; guessFromName(); }); box.appendChild(b); }); }
 
-  function setPomo(on){ pickedPomo=on; document.getElementById("pomoToggle").classList.toggle("on",on); document.getElementById("minWrap").style.display=on?"":"none"; }
-  function setGoal(on){ pickedGoal=on; document.getElementById("goalToggle").classList.toggle("on",on); }
-  document.getElementById("minCustom").addEventListener("input", function(e){
-    var v=parseInt(e.target.value,10);
-    if(!isNaN(v)){ if(v<1)v=1; if(v>MIN_CAP)v=MIN_CAP; pickedMin=v; buildMin(); }
-  });
+  function setRemind(on){ remindOn=!!on; $("remindToggle").classList.toggle("on",remindOn); $("remindTimeWrap").style.display=remindOn?"":"none"; }
+  function show(id,on){ $(id).style.display=on?"":"none"; }
+  function gcalUrl(name,due,time){
+    var base="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(name||"Task")+"&details="+encodeURIComponent("Added from Ember");
+    var d=due.replace(/-/g,""), hm=parseHM(time);
+    if(!hm){ var nx=parseYmd(due); nx.setDate(nx.getDate()+1); return base+"&dates="+d+"/"+ymd(nx).replace(/-/g,""); }
+    var s=d+"T"+pad2(hm.h)+pad2(hm.m)+"00", e=new Date(+due.slice(0,4),+due.slice(5,7)-1,+due.slice(8,10),hm.h+1,hm.m);
+    return base+"&dates="+s+"/"+ymd(e).replace(/-/g,"")+"T"+pad2(e.getHours())+pad2(e.getMinutes())+"00";
+  }
+  function refreshGcal(){
+    var a=$("taskGcal"), due=$("taskDue").value;
+    if(addMode!=="task" || isNative() || !due){ a.style.display="none"; return; }
+    a.href=gcalUrl(gInput.value.trim(), due, $("taskTime").value); a.style.display="";
+  }
 
-  function show(id,on){ document.getElementById(id).style.display=on?"":"none"; }
   function openSheet(mode, prefill){
-    addMode=mode; gInput.value=""; saveBtn.disabled=true;
+    addMode=mode; gInput.value=""; saveBtn.disabled=true; editTask=null; kindTouched=false;
     var isHabit=mode==="habit", isFree=mode==="free", isTask=mode==="task";
-    document.getElementById("sheetTitle").textContent=isHabit?"New habit":isFree?"New counter":"New task";
-    document.getElementById("nameLabel").textContent=isTask?"Task":isFree?"What are you staying free from?":"Name";
+    prefill=prefill||{};
+    $("sheetTitle").textContent=isHabit?"New habit":isFree?"New counter":(prefill.edit?"Edit task":"New task");
+    $("nameLabel").textContent=isTask?"Task":isFree?"What are you staying free from?":"Name";
     gInput.placeholder=isTask?"Finish essay draft":isFree?"No doomscrolling":"Reading";
-    saveBtn.textContent=isHabit?"Add habit":isFree?"Start counter":"Add task";
-    show("suggestField",isHabit); show("catField",isHabit); show("freqField",isHabit); show("pomoField",isHabit); show("goalField",isHabit);
-    show("sinceField",isFree); show("dueField",isTask);
-    if(isHabit){ pickedCat=(prefill&&prefill.cat)||"Reading"; pickedFreq=7; setPomo(false); setGoal(false); pickedMin=25;
-      buildSuggest(); buildCat(); buildFreq(); buildMin();
-      if(prefill&&prefill.name){ gInput.value=prefill.name; saveBtn.disabled=false; } }
+    saveBtn.textContent=isHabit?"Add habit":isFree?"Start counter":(prefill.edit?"Save":"Add task");
+    show("suggestField",isHabit); show("catField",isHabit); show("freqField",isHabit); show("kindField",isHabit);
+    show("remindField",isHabit && isNative());
+    show("sinceField",isFree); show("taskFields",isTask); show("editDelete",isTask && !!prefill.edit);
+    if(isHabit){ pickedCat=prefill.cat||"Reading"; pickedFreq=7; pickedKind="none"; setRemind(false); $("remindTime").value="20:00";
+      buildSuggest(); buildCat(); buildFreq(); buildKind();
+      if(prefill.name){ gInput.value=prefill.name; saveBtn.disabled=false; guessFromName(); } }
     if(isFree){ pickedSince=0; buildSince(); }
-    if(isTask){ document.getElementById("taskDue").value=""; }
-    scrim.classList.add("open"); setTimeout(function(){ gInput.focus(); },60);
+    if(isTask){
+      var t=prefill.edit||null; editTask=t;
+      if(t){ gInput.value=t.name; saveBtn.disabled=false; $("taskDue").value=t.due||""; $("taskTime").value=t.time||""; }
+      else { $("taskDue").value=prefill.due||(taskSel||""); $("taskTime").value=""; }
+      refreshGcal();
+    }
+    scrim.classList.add("open"); if(!(isTask&&editTask)) setTimeout(function(){ gInput.focus(); },60);
   }
   function closeSheet(){ scrim.classList.remove("open"); }
-  gInput.addEventListener("input", function(){ saveBtn.disabled=gInput.value.trim().length===0; });
+  gInput.addEventListener("input", function(){ saveBtn.disabled=gInput.value.trim().length===0; guessFromName(); if(addMode==="task") refreshGcal(); });
   gInput.addEventListener("keydown", function(e){ if(e.key==="Enter" && gInput.value.trim()) commit(); });
-  document.getElementById("pomoToggle").addEventListener("click", function(){ setPomo(!pickedPomo); });
-  document.getElementById("goalToggle").addEventListener("click", function(){ setGoal(!pickedGoal); });
+  $("remindToggle").addEventListener("click", function(){ setRemind(!remindOn); });
+  $("taskDue").addEventListener("input", refreshGcal);
+  $("taskTime").addEventListener("input", refreshGcal);
+  $("taskClear").addEventListener("click", function(){ $("taskDue").value=""; $("taskTime").value=""; refreshGcal(); });
+  $("editDelete").addEventListener("click", function(){
+    if(!editTask) return;
+    if(!confirm('Delete "'+editTask.name+'"?')) return;
+    var id=editTask.id; state.tasks=state.tasks.filter(function(x){return x.id!==id;}); save(); closeSheet(); renderTasks(); renderHero();
+  });
 
   function commit(){
     var name=gInput.value.trim(); if(!name) return;
     if(addMode==="habit"){
-      state.habits.push({ id:"h"+Date.now()+Math.floor(Math.random()*999), name:name, category:pickedCat, freq:pickedFreq,
-        pomodoro:pickedPomo, minutes:pickedPomo?pickedMin:0, goalEnabled:pickedGoal, created:Date.now() });
-      save(); if(view==="habits") renderHabits(); renderHero(); toast("Habit added — mark it done when you do it");
+      var rv=null; if(isNative() && remindOn){ rv=$("remindTime").value||"20:00"; if(!parseHM(rv)) rv="20:00"; }
+      var nh={ id:"h"+Date.now()+Math.floor(Math.random()*999), name:name, category:pickedCat, freq:pickedFreq,
+        kind:pickedKind, items:[], resetDaily:pickedKind==="subjects", remind:rv, created:Date.now() };
+      state.habits.push(nh);
+      save(); closeSheet(); if(view==="habits") renderHabits(); renderHero();
+      if(pickedKind!=="none"){ openHabit(nh); setTimeout(function(){ try{ $("hAddInput").focus(); }catch(e){} },80); }
+      else toast("Habit added — tap it when you do it");
+      return;
     } else if(addMode==="free"){ addFree(name,pickedSince); }
     else if(addMode==="task"){
-      var due=document.getElementById("taskDue").value || null;
-      state.tasks.push({ id:"t"+Date.now()+Math.floor(Math.random()*999), name:name, due:due, done:false, created:Date.now() });
-      save(); if(due) askNotifyPermission(); if(view==="tasks") renderTasks(); renderHero(); toast("Task added");
+      var due=$("taskDue").value||null, time=due?($("taskTime").value||null):null;
+      if(editTask){ editTask.name=name; editTask.due=due; editTask.time=time; save(); toast("Task saved"); }
+      else { state.tasks.push({ id:"t"+Date.now()+Math.floor(Math.random()*999), name:name, due:due, time:time, done:false, doneOn:null, created:Date.now() }); save(); if(due) askNotifyPermission(); toast("Task added"); }
+      if(due){ var dd=parseYmd(due); taskY=dd.getFullYear(); taskM=dd.getMonth(); }
+      if(view==="tasks") renderTasks(); renderHero();
     }
     closeSheet();
   }
-  function confirmDeleteHabit(h){ if(confirm('Delete "'+h.name+'"? Its history will be removed.')){ state.habits=state.habits.filter(function(x){return x.id!==h.id;}); delete state.logs[h.id]; delete state.sessions[h.id]; save(); renderHabits(); renderHero(); } }
-  document.getElementById("cancelBtn").addEventListener("click", closeSheet);
-  document.getElementById("sheetXBtn").addEventListener("click", closeSheet);
+  $("cancelBtn").addEventListener("click", closeSheet);
+  $("sheetXBtn").addEventListener("click", closeSheet);
   saveBtn.addEventListener("click", commit);
   scrim.addEventListener("click", function(e){ if(e.target===scrim) closeSheet(); });
-
-  // ================= habit session sheet =================
-  var sessScrim=document.getElementById("sessionScrim"), sessGoalInput=document.getElementById("sessGoal");
-  var sessHabit=null;
-  function openSession(h){
-    sessHabit=h;
-    document.getElementById("sessTitle").textContent=h.name;
-    var sub=[]; sub.push(freqLabel(h.freq||7)); if(h.pomodoro) sub.push((h.minutes||25)+" min focus");
-    document.getElementById("sessSub").textContent=sub.join(" · ");
-    show("sessGoalField", !!h.goalEnabled);
-    sessGoalInput.value=h.goalEnabled?lastGoal(h):"";
-    document.getElementById("sessGo").textContent=h.pomodoro?"Start focus":"Mark done";
-    sessScrim.classList.add("open");
-    if(h.goalEnabled) setTimeout(function(){ sessGoalInput.focus(); },60);
-  }
-  function closeSession(){ sessScrim.classList.remove("open"); }
-  document.getElementById("sessCancel").addEventListener("click", closeSession);
-  document.getElementById("sessXBtn").addEventListener("click", closeSession);
-  sessScrim.addEventListener("click", function(e){ if(e.target===sessScrim) closeSession(); });
-  document.getElementById("sessGo").addEventListener("click", function(){
-    var h=sessHabit; if(!h) return;
-    var goalText=h.goalEnabled?sessGoalInput.value:"";
-    closeSession();
-    if(h.pomodoro){
-      openTimer({ title:h.name, catLabel:h.category, cat:toneFor(h.category), minutes:h.minutes||25,
-        onComplete:function(){ completeHabit(h, goalText, h.minutes||25); if(view==="habits"){ renderHabits(); renderHero(); } } });
-    } else {
-      completeHabit(h, goalText, 0); renderAndPulseHabit(h.id);
-    }
-  });
 
   // ================= gym editor =================
   var gymScrim=document.getElementById("gymScrim"), exList=document.getElementById("exList"), gymNote=document.getElementById("gymNote");
@@ -1175,18 +1674,25 @@
       d.querySelectorAll(".set-del").forEach(function(btn,si){ btn.addEventListener("click", function(){ var cur=readGymDOM(); cur[i].sets.splice(si,1); if(!cur[i].sets.length) cur[i].sets.push({w:"",r:""}); renderExList(cur); }); });
     });
   }
+  var sessMore=false;
+  function routineSessions(d){ var r=ROUTINES[routineOf(d)], seen={}, out=[]; [1,2,3,4,5,6,0].forEach(function(k){ var s=r.byDay[k]; if(!seen[s]){ seen[s]=1; out.push(s); } }); return out; }
   function renderSessChips(){
-    var opts=PLAN.order.map(function(k){ return {label:PLAN.sessions[k].label, val:k}; });
-    chipRow(document.getElementById("sessChips"), opts, function(o){ return o.val===gymSession; }, function(o){
+    var ids=sessMore?PLAN.order.slice():routineSessions(gymDate);
+    if(ids.indexOf("rest")===-1) ids.push("rest");
+    if(ids.indexOf(gymSession)===-1) ids.push(gymSession);
+    var opts=ids.map(function(k){ return {label:PLAN.sessions[k].label, val:k}; });
+    if(!sessMore) opts.push({label:"More…", val:"__more"});
+    chipRow($("sessChips"), opts, function(o){ return o.val===gymSession; }, function(o){
+      if(o.val==="__more"){ sessMore=true; renderSessChips(); return; }
       var cur=readGymDOM(); gymSession=o.val; renderSessChips(); renderExList(planExercises(gymSession,cur));
     });
     var s=PLAN.sessions[gymSession];
-    document.getElementById("gymTitle").textContent=s.label+(s.min?" · ~"+s.min+" min":"");
-    document.getElementById("sessInfo").textContent=s.info||"";
+    $("gymTitle").textContent=s.label+(s.min?" · ~"+s.min+" min":"");
+    $("sessInfo").textContent=s.info||"";
   }
   function setUnitButtons(){ gymScrim.querySelectorAll(".unit-row button").forEach(function(b){ b.classList.toggle("sel", b.getAttribute("data-unit")===unit()); }); }
   function openGymEditor(d){
-    gymDate=d;
+    gymDate=d; sessMore=false;
     document.getElementById("gymDateLabel").textContent=parseYmd(d).toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
     var w=state.workouts[d]||{exercises:[],note:""};
     var saved=(w.exercises&&w.exercises.length)?JSON.parse(JSON.stringify(w.exercises)):[];
@@ -1229,63 +1735,482 @@
   document.getElementById("gymClear").addEventListener("click", function(){ delete state.workouts[gymDate]; save(); closeGym(); if(view==="gym") renderGym(); renderHero(); toast("Day cleared"); });
   gymScrim.addEventListener("click", function(e){ if(e.target===gymScrim) closeGym(); });
 
-  // ================= focus timer =================
-  var focus=document.getElementById("focus"), ringFg=document.getElementById("ringFg");
-  var R=116, C=2*Math.PI*R; ringFg.style.strokeDasharray=C; ringFg.style.strokeDashoffset=C;
-  var T={ title:"", minutes:25, totalMs:0, endAt:0, remaining:0, mode:"idle", iv:null, actx:null, wake:null, onComplete:null };
-  function fmtTimer(ms){ var s=Math.max(0,Math.round(ms/1000)); var h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=s%60; function p(n){return String(n).padStart(2,"0");} return h>0?h+":"+p(m)+":"+p(sec):m+":"+p(sec); }
-  function setRing(frac){ ringFg.style.strokeDashoffset=C*(1-Math.max(0,Math.min(1,frac))); }
-  function buildPresets(){ var box=document.getElementById("presets"); box.innerHTML=""; [10,20,25,30,45,60,90].forEach(function(v){ var b=document.createElement("button"); b.className="preset"+(v===T.minutes?" sel":""); b.textContent=v+"m"; b.addEventListener("click", function(){ T.minutes=v; refreshIdle(); }); box.appendChild(b); }); }
-  function refreshIdle(){ if(T.minutes<1)T.minutes=1; if(T.minutes>180)T.minutes=180; document.getElementById("fTime").textContent=fmtTimer(T.minutes*MIN); setRing(0); buildPresets(); }
-  function mkBtn(label,cls,fn){ var b=document.createElement("button"); b.className="btn"+(cls?" "+cls:""); b.textContent=label; b.addEventListener("click",fn); return b; }
-  function renderActions(){
-    var box=document.getElementById("fActions"); box.innerHTML="";
-    document.getElementById("fDone").style.display=(T.mode==="done")?"block":"none";
-    document.getElementById("fIdle").style.display=(T.mode==="idle")?"block":"none";
-    if(T.mode==="idle") box.appendChild(mkBtn("Start","primary",startTimer));
-    else if(T.mode==="running"){ box.appendChild(mkBtn("Pause","",pauseTimer)); box.appendChild(mkBtn("End","",function(){ endTimer(); })); }
-    else if(T.mode==="paused"){ box.appendChild(mkBtn("Resume","primary",resumeTimer)); box.appendChild(mkBtn("End","",function(){ endTimer(); })); }
-    else if(T.mode==="done") box.appendChild(mkBtn("Done","primary",closeTimer));
+  // ================= sounds (Web Audio; the same SOUNDS table is rendered to WAV files for Android) =================
+  var AC=null;
+  function ensureAudio(){ try{ if(!AC){ AC=new (window.AudioContext||window.webkitAudioContext)(); } if(AC.state==="suspended") AC.resume(); }catch(e){} }
+  function playSound(id){
+    try{
+      ensureAudio(); if(!AC) return;
+      var s=soundById(id), t0=AC.currentTime+0.03, master=AC.createGain(); master.gain.value=0.7; master.connect(AC.destination);
+      s.n.forEach(function(n){
+        (n.p||[[1,1]]).forEach(function(pt){
+          var o=AC.createOscillator(), g=AC.createGain(), rg=AC.createGain(), st=t0+n.t, peak=n.g*pt[1];
+          o.type=(n.w==="q")?"square":"sine"; o.frequency.value=n.f*pt[0];
+          g.gain.setValueAtTime(0.0001,st); g.gain.linearRampToValueAtTime(peak,st+0.006); g.gain.setTargetAtTime(0.0001,st+0.006,1/n.k);
+          rg.gain.setValueAtTime(1,st+Math.max(0,n.d-0.02)); rg.gain.linearRampToValueAtTime(0,st+n.d);
+          o.connect(g); g.connect(rg); rg.connect(master); o.start(st); o.stop(st+n.d+0.02);
+        });
+      });
+    }catch(e){}
   }
-  function openTimer(cfg){ T.title=cfg.title; T.minutes=cfg.minutes||25; T.onComplete=cfg.onComplete||null; T.mode="idle";
-    document.getElementById("fCat").textContent=cfg.catLabel||""; focus.style.setProperty("--tone",cfg.cat||"var(--ember)"); document.getElementById("fName").textContent=cfg.title;
-    refreshIdle(); renderActions(); focus.classList.add("open"); }
-  function ensureAudio(){ try{ if(!T.actx){ T.actx=new (window.AudioContext||window.webkitAudioContext)(); } if(T.actx.state==="suspended") T.actx.resume(); }catch(e){} }
-  function beep(){ try{ if(!T.actx) return; var o=T.actx.createOscillator(), g=T.actx.createGain(); o.connect(g); g.connect(T.actx.destination); o.type="sine"; o.frequency.value=660; var t=T.actx.currentTime; g.gain.value=0.001; g.gain.exponentialRampToValueAtTime(0.25,t+0.03); g.gain.exponentialRampToValueAtTime(0.0001,t+0.9); o.start(t); o.stop(t+0.95); }catch(e){} }
+
+  // ================= focus session (overlay) =================
+  var focus=$("focus"), ringFg=$("ringFg");
+  var R=116, C=2*Math.PI*R; ringFg.style.strokeDasharray=C; ringFg.style.strokeDashoffset=C;
+  var T={ kind:"countdown", cfg:null, cdMs:0, habit:null, title:"", idx:0, phase:null, totalMs:0, endAt:0, remaining:0, waitIdx:0, mode:"idle", iv:null, wake:null, shown:"" };
+  function fmtTimer(ms){ var s=Math.max(0,Math.ceil(ms/1000)); var h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=s%60; return h>0?h+":"+pad2(m)+":"+pad2(sec):m+":"+pad2(sec); }
+  function setRing(frac){ ringFg.style.strokeDashoffset=C*(1-Math.max(0,Math.min(1,frac))); }
+  function mkBtn(label,cls,fn){ var b=document.createElement("button"); b.className="btn"+(cls?" "+cls:""); b.textContent=label; b.addEventListener("click",fn); return b; }
+  function phaseName(t){ return t==="short"?"Short break":t==="long"?"Long break":"Focus"; }
+
+  // One phase of the session. Countdown = a single "focus" phase; pomodoro alternates focus and breaks,
+  // with a long break after every `cycles` focus rounds, forever, until you end it.
+  function phaseAt(i){
+    if(T.kind==="countdown") return { type:"focus", ms:T.cdMs, round:1 };
+    var c=T.cfg, f=Math.floor(i/2);
+    if(i%2===0) return { type:"focus", ms:c.focus*MIN, round:(f%c.cycles)+1 };
+    return ((f+1)%c.cycles===0) ? { type:"long", ms:c.long*MIN, round:c.cycles } : { type:"short", ms:c.short*MIN, round:(f%c.cycles)+1 };
+  }
+  function nextText(i){
+    if(T.kind==="countdown") return "";
+    var nx=phaseAt(i+1); return "Next: "+phaseName(nx.type).toLowerCase()+" · "+Math.round(nx.ms/MIN)+" min";
+  }
+  function paintPhase(){
+    var ph=T.phase, brk=ph.type!=="focus", pill=$("fPhase");
+    pill.textContent=T.kind==="countdown"?"Countdown":phaseName(ph.type); pill.classList.toggle("brk",brk);
+    $("fName").textContent=brk?"Step away for a moment":T.title;
+    var dots=$("fDots"); dots.innerHTML="";
+    if(T.kind==="pomodoro"){
+      var cyc=T.cfg.cycles, done=brk?ph.round:ph.round-1;
+      for(var i=0;i<cyc;i++){ var d=document.createElement("i"); if(i<done) d.className="on"; else if(i===done && !brk) d.className="cur"; dots.appendChild(d); }
+    }
+    $("fSub").textContent=(T.mode==="running"||T.mode==="paused")?nextText(T.idx):"";
+    setRing(0); T.shown=""; paintTime(T.endAt-Date.now()); renderActions();
+  }
+  function paintTime(rem){
+    if(T.mode==="paused") rem=T.remaining;
+    var txt=fmtTimer(rem); if(txt!==T.shown){ T.shown=txt; $("fTime").textContent=txt; }
+    setRing((T.totalMs-Math.max(0,rem))/T.totalMs);
+  }
+  function renderActions(){
+    var box=$("fActions"); box.innerHTML="";
+    $("fDone").style.display=(T.mode==="done")?"block":"none";
+    if(T.mode==="running"){ box.appendChild(mkBtn("Pause","",pauseTimer)); if(T.kind==="pomodoro") box.appendChild(mkBtn("Skip","",skipPhase)); box.appendChild(mkBtn("End","",function(){ requestEnd(); })); }
+    else if(T.mode==="paused"){ box.appendChild(mkBtn("Resume","primary",resumeTimer)); box.appendChild(mkBtn("End","",function(){ requestEnd(); })); }
+    else if(T.mode==="waiting"){ var nx=phaseAt(T.waitIdx); box.appendChild(mkBtn("Start "+phaseName(nx.type).toLowerCase(),"primary",function(){ beginPhase(T.waitIdx,Date.now()); nativeTimerSchedule(); acquireWake(); })); box.appendChild(mkBtn("End","",function(){ endTimer(); })); }
+    else if(T.mode==="done") box.appendChild(mkBtn("Done","primary",endTimer));
+  }
+  function beginPhase(i,startAt){ T.idx=i; T.phase=phaseAt(i); T.totalMs=T.phase.ms; T.endAt=startAt+T.totalMs; T.mode="running"; paintPhase(); persistSession(); }
+
+  // Android may close the app while a session runs (the alarms keep working on their own). Keep the session so it
+  // comes back, caught up, when the app reopens.
+  var SKEY="ember.session";
+  function persistSession(){
+    try{
+      if(T.mode!=="running" && T.mode!=="paused" && T.mode!=="waiting"){ localStorage.removeItem(SKEY); return; }
+      localStorage.setItem(SKEY, JSON.stringify({ kind:T.kind, cfg:T.cfg, cdMs:T.cdMs, habit:T.habit, title:T.title, idx:T.idx, endAt:T.endAt, remaining:T.remaining, waitIdx:T.waitIdx, mode:T.mode }));
+    }catch(e){}
+  }
+  function restoreSession(){
+    try{
+      var raw=localStorage.getItem(SKEY); if(!raw) return;
+      var s=JSON.parse(raw);
+      if(!s || !s.cfg || ["running","paused","waiting"].indexOf(s.mode)===-1 || Date.now()-(s.endAt||0)>12*HOUR){ localStorage.removeItem(SKEY); return; }
+      T.kind=s.kind; T.cfg=s.cfg; T.cdMs=s.cdMs; T.habit=s.habit; T.title=s.title;
+      var h=state.habits.find(function(x){return x.id===T.habit;});
+      focus.style.setProperty("--tone", h?toneFor(h.category):"var(--ember)");
+      focus.classList.add("open");
+      T.idx=s.idx; T.phase=phaseAt(s.idx); T.totalMs=T.phase.ms; T.endAt=s.endAt; T.remaining=s.remaining||0; T.waitIdx=s.waitIdx||0; T.mode=s.mode;
+      if(T.mode==="waiting") paintWaiting(); else paintPhase();
+      if(T.mode==="running"){ if(T.iv) clearInterval(T.iv); T.iv=setInterval(loop,250); acquireWake(); loop(); if(T.mode==="running") nativeTimerSchedule(); }
+    }catch(e){ try{ localStorage.removeItem(SKEY); }catch(_){} }
+  }
+  function paintWaiting(){
+    var ph=T.phase, nx=phaseAt(T.waitIdx);
+    $("fPhase").textContent=phaseName(ph.type)+" finished"; $("fPhase").classList.add("brk"); $("fName").textContent=T.title;
+    $("fSub").textContent="Up next: "+phaseName(nx.type).toLowerCase()+" · "+Math.round(nx.ms/MIN)+" min";
+    $("fTime").textContent=fmtTimer(0); setRing(1); renderActions();
+  }
+
+  function startFocusSession(){
+    var f=fcfg();
+    if(f.mode==="countdown" && cdSeconds()<1){ toast("Pick a time first"); return; }
+    var h=state.habits.find(function(x){return x.id===f.habit;});
+    T.kind=f.mode; T.cfg=JSON.parse(JSON.stringify(f)); T.cdMs=cdSeconds()*1000; T.habit=h?h.id:null;
+    T.title=(f.label&&f.label.trim())||(h?h.name:(f.mode==="pomodoro"?"Pomodoro":"Focus"));
+    ensureAudio(); acquireWake(); askNotifyPermission();
+    focus.style.setProperty("--tone", h?toneFor(h.category):"var(--ember)");
+    focus.classList.add("open");
+    beginPhase(0,Date.now());
+    if(T.iv) clearInterval(T.iv); T.iv=setInterval(loop,250);
+    nativeTimerSchedule();
+  }
   function acquireWake(){ try{ if(navigator.wakeLock){ navigator.wakeLock.request("screen").then(function(w){ T.wake=w; }).catch(function(){}); } }catch(e){} }
   function releaseWake(){ try{ if(T.wake){ T.wake.release(); T.wake=null; } }catch(e){} }
-  function startTimer(){ askNotifyPermission(); ensureAudio(); acquireWake(); T.totalMs=T.minutes*MIN; T.endAt=Date.now()+T.totalMs; T.mode="running"; renderActions(); loop(); if(T.iv) clearInterval(T.iv); T.iv=setInterval(loop,250); }
-  function loop(){ if(T.mode!=="running") return; var rem=T.endAt-Date.now(); if(rem<=0){ rem=0; finishTimer(); } document.getElementById("fTime").textContent=fmtTimer(rem); setRing((T.totalMs-rem)/T.totalMs); }
-  function pauseTimer(){ if(T.mode!=="running")return; T.remaining=T.endAt-Date.now(); T.mode="paused"; if(T.iv){clearInterval(T.iv);T.iv=null;} renderActions(); releaseWake(); }
-  function resumeTimer(){ if(T.mode!=="paused")return; T.endAt=Date.now()+T.remaining; T.mode="running"; acquireWake(); renderActions(); T.iv=setInterval(loop,250); }
-  function endTimer(){ if(T.iv){clearInterval(T.iv);T.iv=null;} releaseWake(); closeTimer(); }
-  function finishTimer(){ if(T.iv){clearInterval(T.iv);T.iv=null;} T.mode="done"; setRing(1); document.getElementById("fTime").textContent=fmtTimer(0); releaseWake(); beep(); try{ if(navigator.vibrate) navigator.vibrate([120,60,120]); }catch(e){} notify("Ember", T.title+" — session complete."); if(T.onComplete){ try{ T.onComplete(); }catch(e){} } renderActions(); }
-  function closeTimer(){ if(T.iv){clearInterval(T.iv);T.iv=null;} releaseWake(); focus.classList.remove("open"); T.mode="idle"; render(); }
-  document.getElementById("minus").addEventListener("click", function(){ if(T.mode==="idle"){ T.minutes-=5; refreshIdle(); } });
-  document.getElementById("plus").addEventListener("click", function(){ if(T.mode==="idle"){ T.minutes+=5; refreshIdle(); } });
-  document.getElementById("fClose").addEventListener("click", function(){ if(T.mode==="running"||T.mode==="paused"){ if(!confirm("End this session? It won't be counted.")) return; } endTimer(); });
+
+  function creditFocus(ms){
+    var min=Math.max(1,Math.round(ms/MIN)), d=today(), s=state.focusStats[d]||(state.focusStats[d]={n:0,min:0});
+    s.n++; s.min+=min;
+    if(T.habit){ var h=state.habits.find(function(x){return x.id===T.habit;}); if(h){ addHabitFocus(h,min); completeHabit(h); } }
+    save();
+  }
+  function alarm(){ playSound(T.cfg.sound); try{ if(navigator.vibrate) navigator.vibrate([200,100,200,100,300]); }catch(e){} }
+  function loop(){
+    if(T.mode!=="running") return;
+    var now=Date.now(), moved=false;
+    while(T.mode==="running" && T.endAt<=now){ finishPhase(now); moved=true; }   // several phases can pass while the app sleeps
+    if(moved && T.mode==="running") nativeTimerSchedule();
+    if(T.mode==="running") paintTime(T.endAt-now);
+  }
+  function finishPhase(now){
+    var ph=T.phase, endedAt=T.endAt, fresh=(now-endedAt)<5000;
+    if(ph.type==="focus") creditFocus(ph.ms);
+    if(fresh) alarm();
+    if(T.kind==="countdown"){
+      T.mode="done"; T.endAt=endedAt; setRing(1); $("fTime").textContent=fmtTimer(0); $("fSub").textContent="";
+      releaseWake(); persistSession(); if(fresh) notify("Ember", T.title+" — time's up."); renderActions(); return;
+    }
+    if(fresh) notify("Ember", ph.type==="focus" ? "Focus complete. "+nextText(T.idx).replace("Next: ","Up next: ") : "Break over. Time to focus.");
+    if(T.cfg.auto){ beginPhase(T.idx+1, endedAt); }
+    else {
+      T.mode="waiting"; T.waitIdx=T.idx+1; releaseWake(); paintWaiting(); persistSession();
+    }
+  }
+  function pauseTimer(){ if(T.mode!=="running") return; T.remaining=Math.max(0,T.endAt-Date.now()); T.mode="paused"; releaseWake(); renderActions(); nativeTimerCancel(); persistSession(); }
+  function resumeTimer(){ if(T.mode!=="paused") return; T.endAt=Date.now()+T.remaining; T.mode="running"; acquireWake(); renderActions(); nativeTimerSchedule(); persistSession(); }
+  function skipPhase(){ if(T.mode!=="running"&&T.mode!=="paused") return; beginPhase(T.idx+1,Date.now()); nativeTimerSchedule(); }
+  function endTimer(){ if(T.iv){clearInterval(T.iv);T.iv=null;} releaseWake(); nativeTimerCancel(); focus.classList.remove("open"); T.mode="idle"; persistSession(); render(); }
+  function requestEnd(){
+    if((T.mode==="running"||T.mode==="paused") && T.phase && T.phase.type==="focus"){ if(!confirm("End this session? The current focus round won't be counted.")) return; }
+    endTimer();
+  }
+  $("fClose").addEventListener("click", function(){ requestEnd(); });
   document.addEventListener("visibilitychange", function(){ if(!document.hidden && T.mode==="running"){ acquireWake(); loop(); } });
+
+  // ================= notifications =================
+  // Web (browser / PWA): best-effort Notification API, only while the page is open.
+  // Native (Capacitor Android/iOS): real scheduled local notifications that fire even when the app is closed.
+  // Everything scheduled natively is derived from `state` by buildPlan(), so it can never drift out of sync.
+  var notifyAsked=false;
+  function notifySupported(){ return typeof window!=="undefined" && "Notification" in window; }
+  function isNative(){ try{ return !!(window.Capacitor && typeof window.Capacitor.isNativePlatform==="function" && window.Capacitor.isNativePlatform()); }catch(e){ return false; } }
+  function platform(){ try{ return window.Capacitor.getPlatform(); }catch(e){ return "web"; } }
+  function plugin(name){
+    try{
+      var Cp=window.Capacitor; if(!Cp) return null;
+      if(Cp.Plugins && Cp.Plugins[name]) return Cp.Plugins[name];
+      if(isNative() && typeof Cp.registerPlugin==="function") return Cp.registerPlugin(name);
+    }catch(e){}
+    return null;
+  }
+  function LN(){ return plugin("LocalNotifications"); }
+
+  var TIMER_BASE=1, TIMER_SLOTS=12;   // ids 1..99 belong to the focus timer; hashed ids start at 100
+  var NATIVE_MAX=60;                   // iOS keeps at most 64 pending local notifications
+  var nat={ sig:null, busy:false, queued:false, tm:null, channels:false, exactAsking:false };
+  function hash32(s){ var h=5381; for(var i=0;i<s.length;i++){ h=(((h<<5)+h)+s.charCodeAt(i))|0; } h=Math.abs(h)%2000000000; return h<100?h+100:h; }
+
+  // ---- what should be scheduled right now, derived purely from state ----
+  function buildPlan(){
+    var plan=[], now=Date.now();
+    state.habits.forEach(function(h){
+      var hm=parseHM(h.remind); if(!hm) return;
+      var body="A small step today keeps the rhythm going.";
+      if(hasList(h) && itemsOf(h).length){ var left=itemsOf(h).length-itemsDoneCount(h); if(left>0) body=left+" "+kindById(h.kind).noun+(left===1?"":"s")+" still to go."; }
+      plan.push({ key:"h:"+h.id, ch:"reminders", title:"Time for "+h.name, body:body, on:{ hour:hm.h, minute:hm.m, second:0 } });
+    });
+    state.tasks.forEach(function(t){
+      if(t.done || !t.due) return;
+      var hm=parseHM(t.time||"09:00")||{h:9,m:0}, p=String(t.due).split("-");
+      var at=new Date(+p[0], +p[1]-1, +p[2], hm.h, hm.m, 0, 0).getTime();
+      if(isNaN(at) || at<=now+5000) return;
+      plan.push({ key:"t:"+t.id, ch:"reminders", title:"Task due", body:t.name, at:at });
+    });
+    state.free.forEach(function(f){
+      var n=0;
+      for(var i=0;i<LADDER.length && n<3;i++){
+        var at=f.start+LADDER[i].ms;
+        if(at>now+5000){ plan.push({ key:"f:"+f.id+":"+LADDER[i].ms, ch:"milestones", title:f.name+": "+LADDER[i].label+" free",
+          body:"You reached a milestone. Keep going, one day at a time.", at:at }); n++; }
+      }
+    });
+    plan.sort(function(a,b){ var ra=a.on?0:1, rb=b.on?0:1; if(ra!==rb) return ra-rb; if((a.at||0)!==(b.at||0)) return (a.at||0)-(b.at||0); return a.key<b.key?-1:1; });
+    return plan.length>NATIVE_MAX ? plan.slice(0,NATIVE_MAX) : plan;
+  }
+  function toSchema(p){
+    return { id:hash32(p.key), title:p.title, body:p.body, channelId:p.ch, extra:{ key:p.key },
+      schedule: p.on ? { on:p.on, allowWhileIdle:true } : { at:new Date(p.at), allowWhileIdle:true } };
+  }
+
+  // ---- permissions, exact alarms, channels ----
+  async function ensureNativePerms(){
+    var L=LN(); if(!L) return false;
+    try{
+      var p=await L.checkPermissions();
+      if(p && (p.display==="prompt" || p.display==="prompt-with-rationale")) p=await L.requestPermissions();
+      return !!(p && p.display==="granted");
+    }catch(e){ return false; }
+  }
+  // Android 12+: on-time alarms need the "Alarms & reminders" special access. Ask once, politely.
+  async function ensureExactAlarms(){
+    if(platform()!=="android") return true;
+    var L=LN(); if(!L || typeof L.checkExactNotificationSetting!=="function") return true;
+    try{
+      var s=await L.checkExactNotificationSetting();
+      if(s && s.exact_alarm==="granted") return true;
+      if(state.settings.exactAsked || nat.exactAsking) return false;
+      nat.exactAsking=true; state.settings.exactAsked=true; save();
+      if(confirm("To make reminders and timer alerts arrive exactly on time, allow Ember to set alarms.\n\nOn the next screen, turn on “Alarms & reminders” for Ember, then come back.")){
+        await L.changeExactNotificationSetting();
+      }
+    }catch(e){}
+    nat.exactAsking=false;
+    return false;
+  }
+  // Android channels can't change their sound once created, so there is one timer channel per sound.
+  function timerChannel(sound){ return "timer_"+soundById(sound).id; }
+  async function setupChannels(){
+    if(nat.channels || platform()!=="android") return;
+    var L=LN(); if(!L || typeof L.createChannel!=="function") return;
+    try{
+      await L.createChannel({ id:"reminders",  name:"Reminders",   description:"Habit and task reminders",          importance:4, visibility:1, vibration:true });
+      await L.createChannel({ id:"milestones", name:"Milestones",  description:"Milestones for your Free counters", importance:3, visibility:1 });
+      for(var i=0;i<SOUNDS.length;i++){
+        var s=SOUNDS[i];
+        await L.createChannel({ id:"timer_"+s.id, name:"Focus timer · "+s.name, description:"Alarm when a focus phase ends", importance:5, visibility:1, vibration:true, sound:"ember_"+s.id+".wav" });
+      }
+      nat.channels=true;
+    }catch(e){}
+  }
+
+  // ---- keep native schedule in sync with state (debounced, only touches the OS when the plan changed) ----
+  function scheduleSync(){ if(!isNative()) return; clearTimeout(nat.tm); nat.tm=setTimeout(runSync,500); }
+  async function runSync(){
+    var L=LN(); if(!L) return;
+    if(nat.busy){ nat.queued=true; return; }
+    var plan=buildPlan(), sig=JSON.stringify(plan);
+    if(sig===nat.sig) return;
+    nat.busy=true;
+    try{
+      if(plan.length){
+        if(!(await ensureNativePerms())){ nat.busy=false; return; }
+        await setupChannels();
+        await ensureExactAlarms();
+      }
+      var pend=await L.getPending();
+      var stale=((pend && pend.notifications) || []).filter(function(n){ return n.id>=100; }).map(function(n){ return { id:n.id }; });
+      if(stale.length) await L.cancel({ notifications:stale });
+      if(plan.length) await L.schedule({ notifications:plan.map(toSchema) });
+      nat.sig=sig;
+    }catch(e){ try{ console.warn("Ember: notification sync failed", e); }catch(_){} }
+    nat.busy=false;
+    if(nat.queued){ nat.queued=false; scheduleSync(); }
+  }
+
+  // ---- focus alarms: one notification per upcoming phase end, so a pomodoro keeps ringing with the app closed ----
+  function timerNote(slot,i,at){
+    var ph=phaseAt(i), title, body;
+    if(T.kind==="countdown"){ title="Time's up"; body=T.title; }
+    else if(ph.type==="focus"){ var nx=phaseAt(i+1); title="Focus complete"; body=phaseName(nx.type)+" · "+Math.round(nx.ms/MIN)+" min"; }
+    else { var nf=phaseAt(i+1); title="Break over"; body="Time to focus · "+Math.round(nf.ms/MIN)+" min"; }
+    return { id:TIMER_BASE+slot, title:title, body:body, channelId:timerChannel(T.cfg.sound), schedule:{ at:new Date(at), allowWhileIdle:true } };
+  }
+  async function cancelTimerIds(L){
+    var ids=[]; for(var k=0;k<TIMER_SLOTS;k++) ids.push({ id:TIMER_BASE+k });
+    await L.cancel({ notifications:ids });
+  }
+  async function nativeTimerSchedule(){
+    if(!isNative()) return;
+    var L=LN(); if(!L) return;
+    try{
+      await cancelTimerIds(L);
+      if(T.mode!=="running" || !T.phase) return;
+      if(!(await ensureNativePerms())) return;
+      await setupChannels();
+      await ensureExactAlarms();
+      var list=[], at=T.endAt, i=T.idx;
+      for(var n=0;n<TIMER_SLOTS;n++){
+        list.push(timerNote(n,i,at));
+        if(T.kind==="countdown" || !T.cfg.auto) break;
+        i++; at+=phaseAt(i).ms;
+      }
+      list=list.filter(function(x){ return x.schedule.at.getTime()>Date.now()+1000; });
+      if(list.length) await L.schedule({ notifications:list });
+    }catch(e){}
+  }
+  async function nativeTimerCancel(){
+    if(!isNative()) return;
+    var L=LN(); if(!L) return;
+    try{ await cancelTimerIds(L); }catch(e){}
+    try{ var ids=[]; for(var k=0;k<TIMER_SLOTS;k++) ids.push({ id:TIMER_BASE+k }); await L.removeDeliveredNotifications({ notifications:ids }); }catch(e){}
+  }
+
+  // ---- web fallbacks (unchanged behaviour in a normal browser) ----
+  function askNotifyPermission(){
+    if(isNative()) return;                       // native flow asks for permission when something is first scheduled
+    if(notifyAsked || !notifySupported()) return;
+    notifyAsked=true;
+    try{ if(Notification.permission==="default") Notification.requestPermission(); }catch(e){}
+  }
+  function notify(title,body){
+    if(isNative()) return;                       // native alarm already covers this
+    try{
+      if(!notifySupported() || Notification.permission!=="granted") return;
+      new Notification(title, { body:body, icon:iconURI(192) });
+    }catch(e){}
+  }
+  function checkDueTasksNotify(){
+    if(isNative() || !notifySupported() || Notification.permission!=="granted") return;
+    var t=today();
+    if(state.settings.notifiedTasksDate===t) return;
+    var dueToday=state.tasks.filter(function(x){ return !x.done && x.due===t; }).length;
+    var overdue=state.tasks.filter(function(x){ return !x.done && x.due && x.due<t; }).length;
+    if(dueToday+overdue===0) return;
+    var parts=[]; if(dueToday) parts.push(dueToday+" due today"); if(overdue) parts.push(overdue+" overdue");
+    notify("Ember", parts.join(", ")+".");
+    state.settings.notifiedTasksDate=t; save();
+  }
+
+  // ================= calendar sync (Android/iOS app) =================
+  // Pending tasks that have a date are written to a calendar on the phone. If that calendar belongs to your Google
+  // account, Android syncs it to Google Calendar by itself. One-way: Ember -> calendar. Finished or deleted tasks
+  // are removed from the calendar again.
+  function CAL(){ return plugin("CapacitorCalendar"); }
+  var cs={ busy:false, queued:false, tm:null };
+  function calCfg(){ return state.settings.cal; }
+  function calSigOf(t){ return t.name+"|"+t.due+"|"+(t.time||""); }
+  function calTimes(t){
+    var hm=parseHM(t.time), p=t.due.split("-");
+    if(!hm){ var s=new Date(+p[0],+p[1]-1,+p[2],0,0,0,0).getTime(); return { start:s, end:s+DAY, allDay:true }; }
+    var st=new Date(+p[0],+p[1]-1,+p[2],hm.h,hm.m,0,0).getTime(); return { start:st, end:st+HOUR, allDay:false };
+  }
+  async function calAccess(C){
+    try{ var r=await C.requestFullCalendarAccess(); return !!(r && r.result==="granted"); }catch(e){ return false; }
+  }
+  function scheduleCalSync(){ if(!isNative() || !calCfg().on) return; clearTimeout(cs.tm); cs.tm=setTimeout(runCalSync,1500); }
+  async function runCalSync(){
+    var C=CAL(), cfg=calCfg(); if(!C || !cfg.on || !cfg.id) return;
+    if(cs.busy){ cs.queued=true; return; }
+    cs.busy=true;
+    try{
+      var map=state.settings.calMap, wanted={}, changed=false;
+      state.tasks.forEach(function(t){ if(!t.done && t.due) wanted[t.id]=t; });
+      // remove events for tasks that are done or gone
+      for(var id in map){
+        if(wanted[id]) continue;
+        try{ if(map[id].eid) await C.deleteEvent({ id:map[id].eid }); }catch(e){}
+        delete map[id]; changed=true;
+      }
+      for(var tid in wanted){
+        var t=wanted[tid], sig=calSigOf(t), m=map[tid], tm=calTimes(t);
+        var base={ title:t.name, startDate:tm.start, endDate:tm.end, isAllDay:tm.allDay, description:"ember:"+t.id+" (added by Ember)" };
+        if(m && m.sig===sig && m.eid) continue;
+        if(m && m.eid){
+          try{ await C.modifyEvent(Object.assign({ id:m.eid }, base)); m.sig=sig; changed=true; continue; }catch(e){ delete map[tid]; m=null; }
+        }
+        var opts=Object.assign({ calendarId:cfg.id }, base); if(!tm.allDay) opts.alerts=[-10];
+        var res=await C.createEvent(opts), eid=res && res.id;
+        if(!eid){
+          // Android returns no id on create: find the event again by the marker we put in its description.
+          var found=await C.listEventsInRange({ from:tm.start-DAY, to:tm.end+DAY, calendarIds:[cfg.id] });
+          var ev=((found && found.result)||[]).find(function(x){ return x.description && x.description.indexOf("ember:"+t.id+" ")===0; });
+          eid=ev && ev.id;
+        }
+        if(eid){ map[tid]={ eid:String(eid), sig:sig }; changed=true; }
+      }
+      if(changed) save();
+    }catch(e){ try{ console.warn("Ember: calendar sync failed", e); }catch(_){} }
+    cs.busy=false;
+    if(cs.queued){ cs.queued=false; scheduleCalSync(); }
+  }
+  async function calConnect(){
+    var C=CAL(); if(!C){ toast("Calendar isn't available here."); return; }
+    if(!(await calAccess(C))){ toast("Calendar permission was not granted."); return; }
+    try{
+      var r=await C.listCalendars();
+      calChoices=((r && r.result)||[]).filter(function(c){ return c.allowsContentModifications!==false && !c.isImmutable; });
+      if(!calChoices.length){ toast("No writable calendar found on this phone."); calChoices=null; return; }
+    }catch(e){ toast("Couldn't read your calendars."); return; }
+    renderTasks();
+  }
+  function calPick(c){
+    state.settings.cal={ on:true, id:String(c.id), name:c.title||c.internalTitle||"Calendar" };
+    state.settings.calMap={}; calChoices=null; save(); renderTasks(); toast("Syncing to "+state.settings.cal.name); runCalSync();
+  }
+  async function calDisconnect(){
+    var C=CAL(), map=state.settings.calMap, ids=Object.keys(map);
+    if(ids.length && confirm("Also remove the "+ids.length+" event"+(ids.length===1?"":"s")+" Ember added to your calendar?")){
+      for(var i=0;i<ids.length;i++){ try{ if(map[ids[i]].eid && C) await C.deleteEvent({ id:map[ids[i]].eid }); }catch(e){} }
+    }
+    state.settings.cal={ on:false, id:null, name:"" }; state.settings.calMap={}; calChoices=null; save(); renderTasks();
+  }
+  function syncBoxEl(){
+    var box=document.createElement("div"); box.className="syncbox";
+    if(!isNative()){
+      box.innerHTML="<h4>Google Calendar</h4><p>Open a task and tap “Add to Google Calendar”. Automatic sync of pending tasks works in the Android app.</p>";
+      return box;
+    }
+    var cfg=calCfg();
+    if(cfg.on){
+      box.innerHTML="<h4>Calendar sync is on</h4><p>Pending tasks with a date appear in “"+escapeHtml(cfg.name)+"”. Finished or deleted tasks are removed. Changes go one way, from Ember to the calendar.</p>"+
+        "<div class='row-split'><button class='linkbtn' id='calChange'>Change calendar</button><button class='linkbtn' id='calOff'>Turn off</button></div>";
+    } else if(calChoices){
+      box.innerHTML="<h4>Choose a calendar</h4><p>Pick the one that belongs to your Google account to see tasks in Google Calendar.</p><div class='chips' id='calChips'></div><button class='linkbtn' id='calCancel'>Cancel</button>";
+    } else {
+      box.innerHTML="<h4>Sync with your calendar</h4><p>Show pending tasks in the calendar on your phone. If it is your Google calendar, they also appear in Google Calendar.</p><button class='btn' id='calOn'>Connect calendar</button>";
+    }
+    setTimeout(function(){
+      var b;
+      if((b=$("calOn"))) b.addEventListener("click", calConnect);
+      if((b=$("calChange"))) b.addEventListener("click", calConnect);
+      if((b=$("calOff"))) b.addEventListener("click", calDisconnect);
+      if((b=$("calCancel"))) b.addEventListener("click", function(){ calChoices=null; renderTasks(); });
+      if((b=$("calChips")) && calChoices){ chipRow(b, calChoices.map(function(c){ return { label:(c.title||c.internalTitle||"Calendar")+(c.ownerAccount&&c.ownerAccount!==c.title?" · "+c.ownerAccount:""), val:c }; }), function(){return false;}, function(o){ calPick(o.val); }); }
+    },0);
+    return box;
+  }
+
+  // ---- native shell behaviour: Android back button, resume handling ----
+  function nativeBack(){
+    if(focus.classList.contains("open")){ $("fClose").click(); return; }
+    if(scrim.classList.contains("open")){ closeSheet(); return; }
+    if(habitScrim.classList.contains("open")){ closeHabit(); return; }
+    if(gymScrim.classList.contains("open")){ closeGym(); return; }
+    if(view!=="habits"){ setView("habits"); return; }
+    var A=plugin("App");
+    if(A && typeof A.minimizeApp==="function") A.minimizeApp(); else if(A && typeof A.exitApp==="function") A.exitApp();
+  }
+  function initNative(){
+    if(!isNative()) return;
+    document.documentElement.classList.add("native");
+    var hint=$("hint"); if(hint) hint.style.display="none";   // "add to home screen" makes no sense in the app
+    var A=plugin("App");
+    if(A && typeof A.addListener==="function"){
+      try{ A.addListener("backButton", nativeBack); }catch(e){}
+      // coming back from the system "Alarms & reminders" screen (or any resume): re-apply the schedule so it is exact
+      try{ A.addListener("appStateChange", function(st){ if(st && st.isActive){ nat.sig=null; scheduleSync(); scheduleCalSync(); if(T.mode==="running") loop(); } }); }catch(e){} 
+    }
+    scheduleSync(); scheduleCalSync();
+  }
 
   // ================= tabs =================
   function setView(v){
     view=v;
-    ["Habits","Gym","Tasks","Free"].forEach(function(n){ document.getElementById("tab"+n).classList.toggle("active", v===n.toLowerCase()); });
-    document.getElementById("hint").style.display=(v==="habits")?"":"none";
+    ["Habits","Gym","Tasks","Focus","Free"].forEach(function(n){ $("tab"+n).classList.toggle("active", v===n.toLowerCase()); });
+    $("hint").style.display=(v==="habits" && !isNative())?"":"none";
+    $("addBtn").classList.toggle("hidden", v==="focus");
     render();
   }
-  document.getElementById("tabHabits").addEventListener("click", function(){ setView("habits"); });
-  document.getElementById("tabGym").addEventListener("click", function(){ setView("gym"); });
-  document.getElementById("tabTasks").addEventListener("click", function(){ setView("tasks"); });
-  document.getElementById("tabFree").addEventListener("click", function(){ setView("free"); });
-  document.getElementById("addBtn").addEventListener("click", function(){
+  ["Habits","Gym","Tasks","Focus","Free"].forEach(function(n){ $("tab"+n).addEventListener("click", function(){ setView(n.toLowerCase()); }); });
+  $("addBtn").addEventListener("click", function(){
     if(view==="gym") openGymEditor(today());
     else if(view==="tasks") openSheet("task");
     else if(view==="free") openSheet("free");
-    else openSheet("habit");
+    else if(view==="habits") openSheet("habit");
   });
-  // tap the Ember logo 5 times (within 2.5 s between taps) to switch the training plan on or off
+  // tap the Ember logo 5 times (within 2.5 s between taps) to switch the personal training plan on or off
   var logoTaps=0, logoT=null;
-  document.getElementById("brand").addEventListener("click", function(){
+  $("brand").addEventListener("click", function(){
     logoTaps++; clearTimeout(logoT); logoT=setTimeout(function(){ logoTaps=0; },2500);
     if(logoTaps>=5){ logoTaps=0; togglePlan(); }
   });
@@ -1295,10 +2220,10 @@
     var th=qs.get("theme");
     if((th==="red"||th==="green") && state.settings.theme!==th){ state.settings.theme=th; save(); applyTheme(); }
     var qp=qs.get("plan");
-    if(qp==="bulk" && !planOn()){ state.settings.plan="bulk"; save(); setTimeout(function(){ toast(PLAN.name+" plan on — open the Gym tab"); },400); }
+    if(qp==="bulk" && !planOn()){ state.settings.plan="bulk"; save(); setTimeout(function(){ toast("Personal plan on — open the Gym tab"); },400); }
     else if(qp==="off" && planOn()){ state.settings.plan=null; save(); setTimeout(function(){ toast("Plan off — free logging"); },400); }
   }catch(e){}
-  function render(){ renderHero(); if(view==="habits") renderHabits(); else if(view==="gym") renderGym(); else if(view==="tasks") renderTasks(); else renderFree(); }
+  function render(){ renderHero(); if(view==="habits") renderHabits(); else if(view==="gym") renderGym(); else if(view==="tasks") renderTasks(); else if(view==="focus") renderFocus(); else renderFree(); }
 
   // ================= theme =================
   function themeVar(n){ try{ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }catch(e){ return ""; } }
@@ -1381,42 +2306,16 @@
     });
   })();
 
-  // ================= notifications (best-effort; only fires while the app is open) =================
-  var notifyAsked=false;
-  function notifySupported(){ return typeof window!=="undefined" && "Notification" in window; }
-  function askNotifyPermission(){
-    if(notifyAsked || !notifySupported()) return;
-    notifyAsked=true;
-    try{ if(Notification.permission==="default") Notification.requestPermission(); }catch(e){}
-  }
-  function notify(title,body){
-    try{
-      if(!notifySupported() || Notification.permission!=="granted") return;
-      new Notification(title, { body:body, icon:iconURI(192) });
-    }catch(e){}
-  }
-  function checkDueTasksNotify(){
-    if(!notifySupported() || Notification.permission!=="granted") return;
-    var t=today();
-    if(state.settings.notifiedTasksDate===t) return;
-    var dueToday=state.tasks.filter(function(x){ return !x.done && x.due===t; }).length;
-    var overdue=state.tasks.filter(function(x){ return !x.done && x.due && x.due<t; }).length;
-    if(dueToday+overdue===0) return;
-    var parts=[]; if(dueToday) parts.push(dueToday+" due today"); if(overdue) parts.push(overdue+" overdue");
-    notify("Ember", parts.join(", ")+".");
-    state.settings.notifiedTasksDate=t; save();
-  }
-
   // ================= misc =================
-  var toastEl=document.getElementById("toast"), toastT=null;
+  var toastEl=$("toast"), toastT=null;
   function toast(msg){ toastEl.textContent=msg; toastEl.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(function(){ toastEl.classList.remove("show"); },2100); }
   var curDay=today();
-  (function(){ document.getElementById("date").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}); })();
+  (function(){ $("date").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}); })();
   setInterval(function(){ if(view==="free") tickFree(); var t=today(); if(t!==curDay){ curDay=t; render(); checkDueTasksNotify(); } },1000);
   window.addEventListener("pagehide", save);
   document.addEventListener("visibilitychange", function(){ if(document.hidden) save(); else checkDueTasksNotify(); });
 
-  document.getElementById("installHint").addEventListener("click", function(){
+  $("installHint").addEventListener("click", function(){
     var iOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
     alert(iOS?"On iPhone (Safari):\n\n1. Tap the Share button.\n2. Scroll to \"Add to Home Screen\".\n3. Tap Add.":"On Android (Chrome):\n\n1. Tap the ⋮ menu (top-right).\n2. Tap \"Add to Home screen\".\n3. Confirm.");
   });
@@ -1428,7 +2327,9 @@
     var apple=document.createElement("link"); apple.rel="apple-touch-icon"; apple.href=icon; document.head.appendChild(apple);
   }catch(e){}
 
+  initNative();
   render();
+  restoreSession();
   checkDueTasksNotify();
 })();
 </script>
